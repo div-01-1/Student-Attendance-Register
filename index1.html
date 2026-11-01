@@ -1,0 +1,1653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>SRM University AP — Student Attendance System</title>
+<style>
+:root{--bg:#F3F2EA;--card:#FFFFFF;--line:#E2E0D2;--line2:#ECEAE0;--ink:#24261A;--ink2:#5C5F4C;--ink3:#8B8E79;
+--olive:#4A4A24;--olive-d:#37371A;--olive-s:#EDEBDC;--gold:#C9A227;--gold-s:#F6EED9;
+--green:#3E7A3A;--green-d:#2F5E2C;--green-s:#E7F0E2;--red:#A63A2E;--red-d:#7E2B21;--red-s:#F7E7E3;--amber:#9A6A1F;
+--r:10px;--sh:0 1px 2px rgba(36,38,26,.06);--sh2:0 14px 36px rgba(36,38,26,.18);
+--sbw:262px;--rail:74px;--serif:Georgia,'Times New Roman',serif}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:9px;height:9px}::-webkit-scrollbar-thumb{background:#C9C7B4;border-radius:0}
+a{color:var(--olive-d);text-decoration:none}a:hover{text-decoration:underline}
+h1,h2,h3{font-family:var(--serif);letter-spacing:.005em}
+.mono{font-family:ui-monospace,Consolas,monospace;font-size:12.5px}.muted{color:var(--ink2)}.muted3{color:var(--ink3)}
+.spin{width:16px;height:16px;border:2.5px solid var(--olive-s);border-top-color:var(--olive);border-radius:50%;display:inline-block;animation:rot .7s linear infinite;vertical-align:-4px}
+@keyframes rot{to{transform:rotate(360deg)}}
+@keyframes pop{from{opacity:0;transform:scale(.98) translateY(5px)}to{opacity:1;transform:none}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+@keyframes toastIn{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:none}}
+@keyframes shake{20%,60%{transform:translateX(-4px)}40%,80%{transform:translateX(4px)}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:inherit;font-weight:600;font-size:13.5px;border-radius:7px;padding:9px 15px;border:1px solid transparent;cursor:pointer;transition:background .15s,border-color .15s,box-shadow .15s;white-space:nowrap}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.bp{background:var(--olive);color:#FBFAF3}.bp:hover:not(:disabled){background:var(--olive-d)}
+.bg{background:#fff;border-color:var(--line);color:var(--ink)}.bg:hover:not(:disabled){border-color:#C4C2AC;background:#FBFAF4}
+.bgr{background:var(--green-s);color:var(--green-d)}.bgr:hover:not(:disabled){background:#D9E8D2}
+.brr{background:var(--red-s);color:var(--red-d)}.brr:hover:not(:disabled){background:#F0D8D2}
+.bd{background:var(--red);color:#fff}.bd:hover:not(:disabled){background:var(--red-d)}
+.blg{padding:11px 20px;font-size:14px}.wfull{width:100%}
+.iconbtn{width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;border:none;background:none;color:var(--ink2);cursor:pointer;transition:.15s}
+.iconbtn:hover{background:var(--olive-s);color:var(--olive-d)}.iconbtn.danger:hover{background:var(--red-s);color:var(--red-d)}
+.tlink{background:none;border:none;font:inherit;font-weight:600;font-size:13.5px;color:var(--ink);cursor:pointer;padding:0}
+.tlink:hover{color:var(--olive-d);text-decoration:underline}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;padding:2px 9px;border-radius:3px;white-space:nowrap;border:1px solid transparent}
+.cp{background:var(--green-s);color:var(--green-d);border-color:#D3E4CB}.ca{background:var(--red-s);color:var(--red-d);border-color:#EBD2CC}
+.cu{background:#F0EFE5;color:var(--ink3);border-color:var(--line)}.cb{background:var(--gold-s);color:var(--amber);border-color:#EADFBE}
+.avatar{width:34px;height:34px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:11.5px;flex-shrink:0;border:1px solid rgba(36,38,26,.12)}
+.avatar.sm{width:30px;height:30px;font-size:10.5px}.avatar.lg{width:64px;height:64px;font-size:20px;border-radius:10px}
+.dot{width:8px;height:8px;border-radius:2px;display:inline-block}
+.input,.select{height:40px;border:1px solid var(--line);border-radius:6px;padding:0 12px;font:inherit;font-size:13.5px;background:#fff;color:var(--ink);width:100%;outline:none;transition:.15s}
+.input:focus,.select:focus{border-color:var(--olive);box-shadow:0 0 0 3px var(--olive-s)}
+.input::placeholder{color:var(--ink3)}
+.select{cursor:pointer;appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238B8E79' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center;padding-right:34px}
+.lbl{font-size:11.5px;font-weight:700;color:var(--ink2);margin-bottom:6px;display:block;letter-spacing:.02em;text-transform:uppercase}
+.ferr{background:var(--red-s);color:var(--red-d);border:1px solid #EBD2CC;font-size:12.5px;font-weight:600;border-radius:6px;padding:9px 12px;margin-top:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh)}
+.cardh{padding:14px 18px;border-bottom:1px solid var(--line2);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.cardh h3{font-size:15.5px}.cardh .sub{font-size:12.5px;color:var(--ink3);margin-top:1px}
+.page{max-width:1280px;margin:0 auto;padding:26px 28px 20px;animation:fadeUp .25s}
+.phead{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:20px;flex-wrap:wrap;border-bottom:2px solid var(--olive);padding-bottom:14px}
+.phead h2{font-size:22px;font-weight:700;color:var(--olive-d)}
+.phead h2::after{content:'';display:block;width:52px;height:3px;background:var(--gold);margin-top:6px}
+.phead p{color:var(--ink2);font-size:13.5px;margin-top:6px}
+.phead .acts{display:flex;gap:10px;flex-wrap:wrap}
+.empty{text-align:center;padding:44px 16px;color:var(--ink3)}
+.empty b{display:block;color:var(--ink2);font-size:14px;margin-bottom:2px}.empty span{font-size:12.5px}
+.tblwrap{overflow-x:auto;border-radius:0 0 var(--r) var(--r)}
+table.tbl{width:100%;border-collapse:collapse;min-width:680px}
+.tbl th{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#6B6E57;font-weight:700;text-align:left;padding:10px 14px;border-bottom:2px solid var(--olive);background:#F5F4E9;white-space:nowrap}
+.tbl td{padding:11px 14px;border-bottom:1px solid var(--line2);font-size:13.5px;vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}.tbl tbody tr:hover{background:#FAF9F1}
+.stucell{display:flex;align-items:center;gap:10px}
+.tdacts{white-space:nowrap;text-align:right}.thacts{text-align:right}
+.filters{display:flex;gap:12px;align-items:flex-end;padding:16px 18px;margin-bottom:16px;flex-wrap:wrap;border-top:3px solid var(--gold)}
+.fsearch{position:relative;flex:1;min-width:200px}.fsearch>span{position:absolute;left:12px;top:11px;color:var(--ink3)}
+.fsearch .input{padding-left:36px}
+.fcount{font-size:12.5px;color:var(--ink3);font-weight:600;margin-left:auto;white-space:nowrap;padding-bottom:10px}
+.ffield{min-width:145px}
+.pager{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;flex-wrap:wrap;gap:10px}
+.pager .info{font-size:12.5px;color:var(--ink3);font-weight:600}
+.pgbtns{display:flex;gap:6px}
+.pg{min-width:32px;height:32px;border-radius:5px;border:1px solid var(--line);background:#fff;color:var(--ink2);cursor:pointer;font:inherit;font-weight:600;font-size:12.5px;display:inline-flex;align-items:center;justify-content:center}
+.pg:hover:not(:disabled){border-color:var(--olive);color:var(--olive-d)}.pg:disabled{opacity:.4;cursor:not-allowed}.pg.on{background:var(--olive);border-color:var(--olive);color:#FBFAF3}
+.app{min-height:100vh}
+.sidebar{position:fixed;inset:0 auto 0 0;width:var(--sbw);background:#26270F;color:#E4E2CE;display:flex;flex-direction:column;z-index:60;transition:width .22s,transform .25s;overflow:hidden}
+.sidebar::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gold)}
+.brand{display:flex;align-items:center;gap:11px;padding:16px 14px 12px;flex-shrink:0}
+.brand img{max-height:46px;max-width:178px;object-fit:contain;background:#FBF9F0;border-radius:4px;padding:2px}
+.sb-univ{min-width:0;line-height:1.25}
+.sb-univ b{display:block;font-family:var(--serif);font-size:14px;color:#FBFAF3;letter-spacing:.02em;white-space:nowrap}
+.sb-univ span{font-size:10.5px;color:#A9AB8D;letter-spacing:.14em;text-transform:uppercase;font-weight:600}
+.railbtn{margin-left:auto;background:none;border:none;color:#8B8D6E;cursor:pointer;padding:4px;border-radius:5px}.railbtn:hover{color:#FBFAF3;background:rgba(255,255,255,.08)}
+.navsec{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#8B8D6E;font-weight:700;padding:14px 26px 6px;white-space:nowrap}
+.nav{flex:1;overflow-y:auto;padding-bottom:8px}.nav::-webkit-scrollbar{width:0}
+.nitem{position:relative;display:flex;align-items:center;gap:12px;padding:10px 12px;margin:2px 12px;border-radius:6px;color:#C2C4A8;font-weight:600;font-size:13.5px;white-space:nowrap;cursor:pointer}
+.nitem:hover{background:rgba(255,255,255,.06);color:#FBFAF3;text-decoration:none}
+.nitem.active{background:rgba(201,162,39,.14);color:#FBFAF3}
+.nitem.active::before{content:'';position:absolute;left:-12px;top:8px;bottom:8px;width:3px;background:var(--gold)}
+.suser{border-top:1px solid rgba(255,255,255,.09);padding:13px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.sutext{min-width:0;line-height:1.3;flex:1}.sutext b{display:block;font-size:12.5px;color:#FBFAF3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sutext span{font-size:10.5px;color:#A9AB8D;font-weight:600}
+.suoutb{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);color:#E4E2CE;font:inherit;font-size:12px;font-weight:700;padding:7px 12px;border-radius:6px;cursor:pointer;flex-shrink:0}
+.suoutb:hover{background:rgba(166,58,46,.35);border-color:rgba(240,185,177,.5);color:#F0B9B1}
+.avn{background:rgba(201,162,39,.18);color:#E8D391}
+.app.rail .sidebar{width:var(--rail)}
+.app.rail .sb-univ,.app.rail .navsec,.app.rail .nitem span,.app.rail .sutext,.app.rail .suoutb{display:none}
+.app.rail .brand{justify-content:center;padding:16px 0 12px}.app.rail .railbtn{display:none}
+.app.rail .brand img{max-width:52px}
+.app.rail .nitem{justify-content:center;padding:11px 0;margin:2px 14px}.app.rail .suser{justify-content:center}
+.main{margin-left:var(--sbw);min-height:100vh;transition:margin .22s;display:flex;flex-direction:column}.app.rail .main{margin-left:var(--rail)}
+.scrim{display:none}
+.topbar{position:sticky;top:0;height:62px;background:rgba(250,249,242,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;padding:0 26px;z-index:50}
+.burger{display:none}
+.crumbs{font-size:11.5px;color:var(--ink3);font-weight:600}
+.crumbs a{cursor:pointer}.crumbs a:hover{color:var(--olive-d)}
+.crumbs b{color:var(--ink2);font-weight:600}
+.tbtitle h1{font-size:16.5px;font-weight:700;color:var(--olive-d);line-height:1.25}
+.tbsearch{position:relative;margin-left:auto;width:min(340px,30vw)}
+.tbsearch>span{position:absolute;left:12px;top:11px;color:var(--ink3)}
+.tbsearch input{width:100%;height:37px;border:1px solid var(--line);border-radius:6px;background:#FBFAF4;padding:0 60px 0 36px;font:inherit;font-size:13px;outline:none}
+.tbsearch input:focus{border-color:var(--olive);background:#fff;box-shadow:0 0 0 3px var(--olive-s)}
+.tbsearch kbd{position:absolute;right:10px;top:9px;font-family:ui-monospace,Consolas;font-size:10px;color:var(--ink3);border:1px solid var(--line);border-radius:4px;padding:2px 5px;background:#fff}
+.tbitem{position:relative}.tbright{display:flex;align-items:center;gap:8px}
+.tbdate{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:var(--ink2);border:1px solid var(--line);border-radius:6px;padding:8px 12px;white-space:nowrap;background:#fff}
+.badge{position:absolute;top:2px;right:2px;min-width:16px;height:16px;background:var(--red);color:#fff;border-radius:99px;font-size:9.5px;font-weight:700;display:none;align-items:center;justify-content:center;padding:0 4px;border:2px solid #FBFAF4}
+.avbtn{width:36px;height:36px;border-radius:6px;border:1px solid rgba(36,38,26,.2);background:var(--olive-s);color:var(--olive-d);font:inherit;font-weight:700;font-size:12px;cursor:pointer}
+.pop{position:absolute;top:calc(100% + 10px);right:0;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:var(--sh2);width:330px;z-index:70;animation:pop .16s;overflow:hidden;display:none}
+.pop.pleft{right:auto;left:0}
+.poph{padding:12px 16px;border-bottom:1px solid var(--line2);font-weight:700;font-size:13.5px;display:flex;justify-content:space-between;align-items:center;gap:8px;font-family:var(--serif)}
+.popb{max-height:340px;overflow-y:auto}
+.prow{display:flex;gap:11px;padding:11px 16px;border-bottom:1px solid var(--line2);align-items:flex-start;cursor:pointer}
+.prow:last-child{border-bottom:none}.prow:hover{background:#FAF9F1}
+.prow .t{font-size:13px;font-weight:600;line-height:1.35}.prow .s{font-size:11.5px;color:var(--ink3);margin-top:1px}
+/* ---------- login / register ---------- */
+.lwrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:44px 16px}
+.llogo{margin-bottom:22px;text-align:center}
+.llogo img{max-height:120px;max-width:480px;object-fit:contain}
+.lcard{width:100%;max-width:400px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:30px 32px 26px;box-shadow:var(--sh);border-top:4px solid var(--olive)}
+.lcard h2{font-size:21px;font-weight:700;color:#37371A}
+.lcard>p{color:var(--ink2);font-size:13px;margin:4px 0 20px}
+.lcard .lbl{margin-top:13px}
+.pww{position:relative}.pww>span{position:absolute;left:12px;top:11px;color:var(--ink3)}
+.pww .input{padding-left:38px;padding-right:42px}
+.pwe{position:absolute;right:6px;top:5px;background:none;border:none;color:var(--ink3);cursor:pointer;padding:6px;border-radius:5px}
+.lrow{display:flex;justify-content:space-between;align-items:center;margin:14px 0 16px;font-size:13px}
+.chk{display:flex;gap:7px;align-items:center;color:var(--ink2);font-weight:600;cursor:pointer}
+.chk input{accent-color:var(--olive);width:15px;height:15px}
+.demobox{margin-top:20px;border:1px dashed #C4C2AC;background:#F7F5EA;border-radius:8px;padding:11px 13px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.demobox b{display:block;font-size:12px}.demobox span{font-size:11px;color:var(--ink3);font-family:ui-monospace,Consolas}
+.lalt{text-align:center;margin-top:16px;font-size:13px;color:var(--ink2)}
+.lalt a{font-weight:700;color:var(--olive-d);cursor:pointer;text-decoration:underline}
+.shake{animation:shake .45s}
+/* ---------- dashboard ---------- */
+.dhead{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:20px;flex-wrap:wrap}
+.dhead h2{font-size:22px;font-weight:700;color:var(--olive-d)}
+.dhead p{color:var(--ink2);margin-top:3px;font-size:13.5px}
+.dhead .acts{display:flex;gap:10px;flex-wrap:wrap}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.stat{padding:16px 18px;border-top:3px solid var(--gold)}
+.stat.p-g{border-top-color:var(--green)}.stat.p-r{border-top-color:var(--red)}.stat.p-o{border-top-color:var(--olive)}
+.stattop{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.static{width:36px;height:36px;border-radius:6px;display:flex;align-items:center;justify-content:center}
+.tolive{background:var(--olive-s);color:var(--olive-d)}.tgreen{background:var(--green-s);color:var(--green-d)}.tred{background:var(--red-s);color:var(--red-d)}.tgold{background:var(--gold-s);color:var(--amber)}
+.statlab{font-size:11.5px;font-weight:700;color:var(--ink2);text-transform:uppercase;letter-spacing:.05em}
+.statval{font-size:29px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.1;font-family:var(--serif)}
+.statfoot{display:flex;align-items:flex-end;gap:10px;margin-top:11px;min-height:28px}
+.statnote{font-size:11.5px;color:var(--ink3);font-weight:600}
+.statspark{margin-left:auto}
+.g2a{display:grid;grid-template-columns:1.85fr 1fr;gap:14px;margin-bottom:18px}
+.g2b{display:grid;grid-template-columns:1.55fr 1fr;gap:14px}
+.legin{display:flex;gap:14px;font-size:12px;font-weight:600;color:var(--ink2)}.legin .dot{margin-right:5px}
+.actrow{display:flex;align-items:center;gap:12px;padding:10px 18px;border-bottom:1px solid var(--line2)}.actrow:last-child{border-bottom:none}
+.actinfo{min-width:0;flex:1}.actname{font-weight:600;font-size:13.5px}.actsub{color:var(--ink3);font-size:11.5px;margin-top:1px}
+.actdate{font-size:11.5px;color:var(--ink3);font-weight:600;min-width:60px;text-align:right}
+.qarow{display:flex;align-items:center;gap:13px;padding:13px 18px;width:100%;background:none;border:none;border-bottom:1px solid var(--line2);text-align:left;font:inherit;cursor:pointer}
+.qarow:last-of-type{border-bottom:none}.qarow:hover{background:#FAF9F1}
+.qaic{width:38px;height:38px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.qarow b{display:block;font-family:var(--serif);font-size:13.5px;color:var(--ink)}.qarow>span:not(.qaic):not(.chev){font-size:12px;color:var(--ink3)}
+.qarow .chev{margin-left:auto;color:#C4C2AC}
+.chartwrap{padding:12px 16px 16px}
+.bars{display:flex;gap:10px;align-items:stretch;height:230px}
+.barcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0}
+.barv{font-size:11px;font-weight:700;color:var(--ink2)}
+.bartrack{flex:1;width:36px;max-width:100%;background:#F1F0E4;border-radius:4px 4px 0 0;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end}
+.bar{width:100%}
+.barl{font-size:10.5px;color:var(--ink3);font-weight:700;white-space:nowrap}
+.hrow{display:flex;align-items:center;gap:13px;padding:9px 18px;border-bottom:1px solid var(--line2)}.hrow:last-child{border-bottom:none}
+.hlab{width:170px;font-size:12.5px;font-weight:600;color:var(--ink2);flex-shrink:0}
+.htrack{flex:1;height:10px;background:#F1F0E4;border-radius:2px;overflow:hidden}
+.hfill{height:100%;background:var(--olive);transition:width .8s cubic-bezier(.22,1,.32,1)}
+.hfill.low{background:var(--red)}
+.hval{width:52px;text-align:right;font-weight:700;font-size:12.5px}
+.mkbtns{display:inline-flex;gap:7px}
+.mkbtn{display:inline-flex;align-items:center;gap:6px;border-radius:6px;padding:6px 12px;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;transition:.15s;border:1px solid var(--line);background:#fff;color:var(--ink2)}
+.mkbtn.p:hover{border-color:var(--green);color:var(--green-d);background:var(--green-s)}
+.mkbtn.a:hover{border-color:var(--red);color:var(--red-d);background:var(--red-s)}
+.mkbtn.p.on{background:var(--green);border-color:var(--green);color:#fff}
+.mkbtn.a.on{background:var(--red);border-color:var(--red);color:#fff}
+.bulk{display:flex;gap:9px;margin-left:auto;flex-wrap:wrap}
+.savebar{position:sticky;bottom:14px;z-index:30;display:flex;align-items:center;gap:14px;padding:13px 18px;margin-top:16px;box-shadow:var(--sh2);flex-wrap:wrap;border-top:3px solid var(--gold)}
+.sbcounts{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.sbitem{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);font-weight:600}.sbitem b{font-size:15px;color:var(--ink)}
+.sbtotal{font-size:12.5px;color:var(--ink3);font-weight:700;border-left:1px solid var(--line);padding-left:18px}.sbtotal b{color:var(--ink)}
+.savebar .btn{margin-left:auto}
+.banner{display:flex;gap:10px;align-items:center;background:var(--gold-s);border:1px solid #EADFBE;color:#6E5B14;font-size:13px;font-weight:600;border-radius:8px;padding:11px 14px;margin-bottom:14px}
+.banner.warn{background:var(--red-s);border-color:#EBD2CC;color:var(--red-d)}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.tile{padding:15px 18px;border-top:3px solid var(--gold)}
+.tile .tl{font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em}
+.tile .tv{font-size:23px;font-weight:700;margin-top:5px;font-variant-numeric:tabular-nums;font-family:var(--serif)}
+.rtrack{height:8px;border-radius:2px;background:#F1F0E4;overflow:hidden;flex:1}
+.rfill{height:100%;background:var(--olive)}.rfill.low{background:var(--red)}
+.stflex{display:flex;gap:16px;flex-wrap:wrap}.stflex>.card{flex:1;min-width:300px}
+.stcol{display:flex;flex-direction:column;gap:16px}
+.detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 20px;padding:16px 18px}
+.detail-grid .lbl{margin-bottom:1px}.detail-grid div div{font-weight:600;font-size:13.5px}
+.switch{position:relative;width:42px;height:24px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.switch .sl{position:absolute;inset:0;background:#C9C7B4;border-radius:99px;cursor:pointer;transition:.2s}
+.switch .sl::before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked+.sl{background:var(--olive)}
+.switch input:checked+.sl::before{transform:translateX(18px)}
+.setrow{display:flex;gap:16px;align-items:flex-start;padding:15px 18px;border-bottom:1px solid var(--line2);flex-wrap:wrap}
+.setrow:last-child{border-bottom:none}
+.setrow .srm{flex:1;min-width:230px}.setrow b{font-size:13.5px;display:block}.setrow p{font-size:12.5px;color:var(--ink3);margin-top:2px}
+.srow{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:700}
+.sdot{width:9px;height:9px;border-radius:50%;background:#C9C7B4}.sdot.on{background:var(--green);box-shadow:0 0 0 3px var(--green-s)}
+.overlay{position:fixed;inset:0;background:rgba(36,38,26,.5);backdrop-filter:blur(3px);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;animation:pop .15s}
+.modal{background:#fff;border-radius:12px;box-shadow:var(--sh2);width:100%;max-width:540px;max-height:92vh;overflow-y:auto;border-top:4px solid var(--olive)}
+.modalh{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:1px solid var(--line2)}.modalh h3{font-size:16px;color:#37371A}
+.modalb{padding:20px 22px}
+.modalf{display:flex;justify-content:flex-end;gap:10px;padding:15px 22px;border-top:1px solid var(--line2);flex-wrap:wrap}
+.modalf .left{margin-right:auto}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.fgrid .full{grid-column:1/-1}
+#toasts{position:fixed;top:18px;right:18px;z-index:300;display:flex;flex-direction:column;gap:10px}
+.toast{background:#26270F;color:#F2F0E0;padding:12px 15px;border-radius:8px;display:flex;gap:11px;align-items:flex-start;box-shadow:var(--sh2);animation:toastIn .25s;max-width:370px;font-size:13px;font-weight:600;line-height:1.45;border-left:3px solid var(--gold)}
+.toast.success svg{color:#9CC48B}.toast.error svg{color:#E89A8E}.toast.info svg{color:#D8C27A}
+.toast button{background:none;border:none;color:#A9AB8D;cursor:pointer;padding:2px}
+.loading{display:flex;flex-direction:column;align-items:center;gap:13px;padding:90px 20px;color:var(--ink3);font-weight:600}
+.loading .spin{width:26px;height:26px;border-width:3px}
+/* ---------- calendar ---------- */
+.calhead{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;padding:12px 18px 4px}
+.calwd{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--ink3);text-align:center;padding:4px 0}
+.calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;padding:8px 18px 18px}
+.calcell{border:1px solid var(--line);border-radius:6px;min-height:76px;padding:6px 8px;cursor:pointer;background:#fff;transition:border-color .12s,box-shadow .12s;position:relative;text-align:left;font:inherit}
+.calcell:hover{border-color:var(--olive);box-shadow:var(--sh)}
+.calcell.off{background:#F1F0E4;color:#B5B7A2;cursor:not-allowed}
+.calcell.today{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold-s)}
+.calcell.sel{background:var(--olive-s);border-color:var(--olive)}
+.cnum{font-weight:700;font-size:13.5px;font-family:var(--serif)}
+.cstat{position:absolute;bottom:6px;left:8px;right:8px;display:flex;gap:6px;font-size:10px;font-weight:700}
+.cstat .pp{color:var(--green-d)}.cstat .aa{color:var(--red-d)}.cstat .nn{color:var(--ink3)}
+.cfull{font-size:9.5px;color:var(--ink3);position:absolute;bottom:22px;left:8px;right:8px;font-weight:700}
+.mnav{display:flex;align-items:center;gap:10px}
+.mtitle{font-family:var(--serif);font-size:17px;font-weight:700;color:var(--olive-d);min-width:150px;text-align:center}
+.foot{max-width:1280px;margin:0 auto;padding:0 28px 34px;color:var(--ink3);font-size:11px;letter-spacing:.02em}
+.foot b{color:var(--ink2)}
+.storageline{margin-top:12px;text-align:center;font-size:11.5px;font-weight:600}
+.storageline.ok{color:var(--green-d)}.storageline.bad{color:var(--red-d)}
+#storBanner{position:fixed;left:14px;bottom:14px;z-index:290;background:var(--red-s);color:var(--red-d);border:1px solid #EBD2CC;border-radius:10px;padding:11px 14px;font-size:12.5px;font-weight:600;max-width:330px;box-shadow:var(--sh2);display:none;align-items:flex-start;gap:10px}
+#storBanner button{background:none;border:none;color:inherit;cursor:pointer;padding:2px}
+#printArea{display:none}
+@media print{body *{visibility:hidden}#printArea,#printArea *{visibility:visible}#printArea{display:block!important;position:absolute;inset:0;padding:8px;font-family:Georgia,serif;color:#111}
+#printArea h1{font-size:19px}#printArea h2{font-size:14px;margin:14px 0 6px}
+#printArea table{width:100%;border-collapse:collapse;font-size:11px}
+#printArea th,#printArea td{border:1px solid #999;padding:4px 8px;text-align:left}#printArea th{background:#eee}
+#printArea img{max-height:70px}}
+@media (max-width:1180px){.stats,.tiles{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:1024px){
+.sidebar{transform:translateX(-100%);width:var(--sbw)!important}
+.app.open .sidebar{transform:none}
+.app.open .scrim{display:block;position:fixed;inset:0;background:rgba(36,38,26,.5);z-index:55}
+.main{margin-left:0!important}.burger{display:inline-flex}
+.g2a,.g2b{grid-template-columns:1fr}}
+@media (max-width:760px){.tbsearch,.tbdate{display:none}.page{padding:18px 14px 14px}.foot{padding:0 14px 28px}
+.stats,.tiles{grid-template-columns:1fr 1fr;gap:11px}.topbar{padding:0 14px}
+.bulk{margin-left:0;width:100%}.fgrid{grid-template-columns:1fr}.detail-grid{grid-template-columns:1fr 1fr}
+.savebar .btn{margin-left:0;width:100%}.statval{font-size:24px}
+.calcell{min-height:56px;padding:4px 5px}.cfull{display:none}.cstat{gap:3px;font-size:9px}}
+@media (max-width:480px){.stats,.tiles{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#6B6E57;font-size:15px">
+    <span style="width:26px;height:26px;border:3px solid #E2E0D2;border-top-color:#4A4A24;border-radius:50%;display:inline-block;animation:rot 1s linear infinite"></span>
+    Loading SRM University AP — Attendance System…
+  </div>
+</div>
+<div id="storBanner"><span id="storBannerTxt"></span><button onclick="this.parentNode.style.display='none'">✕</button></div>
+<div id="bootError" style="display:none;position:fixed;left:50%;top:24px;transform:translateX(-50%);z-index:9999;background:#F7E7E3;color:#7E2B21;border:1px solid #EBD2CC;padding:14px 18px;border-radius:8px;font-weight:600;font-size:13.5px;max-width:90vw"></div>
+<div id="toasts"></div>
+<div id="modalRoot"></div>
+<div id="printArea"></div>
+
+<script>
+'use strict';
+function showBootError(e){var d=document.getElementById('bootError');
+  if(d){d.style.display='block';d.innerHTML='<b>Error:</b> '+((e&&e.message)||e)}}
+window.addEventListener('error',function(e){showBootError(e)});
+window.addEventListener('unhandledrejection',function(e){toast(String(e.reason&&e.reason.message||e.reason||'Error'),'error')});
+
+/* ==== PERSISTENT STORAGE with write verification + loud warning if blocked ==== */
+function safeStore(get){
+  var s=null;
+  try{s=get();var t='__ae_t';s.setItem(t,'1');s.removeItem(t);}catch(e){s=null}
+  function mem(){var m={};
+    return{get:function(k){return Object.prototype.hasOwnProperty.call(m,k)?m[k]:null},
+           set:function(k,v){m[k]=String(v)},del:function(k){delete m[k]},ok:false}}
+  if(!s)return mem();
+  return{get:function(k){try{return s.getItem(k)}catch(e){return null}},
+    set:function(k,v){var ok=true;
+      try{s.setItem(k,String(v));
+        if(s.getItem(k)!==String(v))ok=false;
+      }catch(e){ok=false}
+      if(!ok)showStorBanner();
+      return ok},
+    del:function(k){try{s.removeItem(k)}catch(e){}},
+    ok:true}}
+const LS=safeStore(function(){return window.localStorage});
+const SS=safeStore(function(){return window.sessionStorage});
+function showStorBanner(){
+  var b=document.getElementById('storBanner');if(!b)return;
+  document.getElementById('storBannerTxt').innerHTML=
+    '<b>Storage problem detected.</b> Your browser is blocking saved data (private window, sandboxed preview, or full storage). Changes will <u>not</u> persist. Open <span class="mono">index.html</span> directly by double-clicking it, or use Settings → Backup.';
+  b.style.display='flex'}
+function storageOK(){return !!LS.ok}
+
+/* ============ utils ============ */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const jsStr=s=>String(s).replace(/&/g,'&amp;').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;').replace(/</g,'&lt;');
+const pad=n=>String(n).padStart(2,'0');
+const fmtD=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const todayStr=()=>fmtD(new Date());
+const parseD=s=>{const[a,b,c]=s.split('-').map(Number);return new Date(a,b-1,c)};
+const addDays=(s,n)=>{const d=parseD(s);d.setDate(d.getDate()+n);return fmtD(d)};
+const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const dow=s=>DOW[parseD(s).getDay()];
+const isSun=s=>parseD(s).getDay()===0;
+const pretty=s=>parseD(s).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+const pShort=s=>parseD(s).toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+const mLbl=k=>{const[a,b]=k.split('-').map(Number);return MONTHS[b-1].slice(0,3)+' '+String(a).slice(2)};
+const weekStart=s=>{const d=parseD(s);d.setDate(d.getDate()-((d.getDay()+6)%7));return fmtD(d)};
+const relDay=s=>s===todayStr()?'Today':s===addDays(todayStr(),-1)?'Yesterday':pShort(s);
+const initials=n=>String(n||'').trim().split(/\s+/).slice(0,2).map(w=>w[0].toUpperCase()).join('');
+const profTitle=n=>{const p=String(n||'').trim().split(/\s+/);return p.length>1&&p[0].endsWith('.')?p[0]+' '+p[p.length-1]:(p[p.length-1]||'')};
+const fmt1=v=>(v==null||isNaN(v))?'—':(Math.round(v*10)/10).toFixed(1);
+const DEPTS=['Computer Science & Engineering','Electronics & Communication Engineering','Mechanical Engineering','Civil Engineering'];
+const AVC=[['#EDEBDC','#4A4A24'],['#E7F0E2','#2F5E2C'],['#F7E7E3','#7E2B21'],['#F6EED9','#9A6A1F'],['#E8EEE4','#3E6B4F'],['#EFE9DA','#6E5334'],['#EAE6F0','#5A4E7A']];
+const avc=r=>{let h=0;for(const c of String(r))h=(h*31+c.charCodeAt(0))>>>0;return AVC[h%AVC.length]};
+function hashStr(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function download(name,text,mime){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:mime||'text/csv'}));a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
+const debounce=(f,ms=130)=>{let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>f(...a),ms)}};
+function countUp(el,target,dec,suf){if(!el)return;dec=dec||0;suf=suf||'';const t0=performance.now(),D=700;
+  const st=t=>{const k=Math.min(1,(t-t0)/D),e=1-Math.pow(1-k,3);el.textContent=(target*e).toFixed(dec)+suf;if(k<1)requestAnimationFrame(st)};requestAnimationFrame(st)}
+function logEvent(msg){Store.events.unshift({t:new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}),msg});Store.events=Store.events.slice(0,6)}
+
+const C_P='#3E7CB1', C_A='#C2553B', C_O='#5B4E8C';
+
+/* ============ university identity ============ */
+function sealSVG(size){
+  size=size||48;
+  var ticks='',i,a,x1,y1,x2,y2;
+  for(i=0;i<60;i++){a=i*Math.PI*2/60;
+    x1=60+Math.cos(a)*51.5;y1=60+Math.sin(a)*51.5;x2=60+Math.cos(a)*55.5;y2=60+Math.sin(a)*55.5;
+    ticks+='<line x1="'+x1.toFixed(1)+'" y1="'+y1.toFixed(1)+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)+'" stroke="#4A4A24" stroke-width="1"/>';}
+  var dots=[[54,45],[66,50],[60,57],[49,52],[71,46],[57,37],[65,39],[52,60]].map(function(p){
+    return '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="1.7" fill="#D9822B"/>'}).join('');
+  return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 120 120" style="flex-shrink:0" role="img" aria-label="SRM University AP">'
+  +'<circle cx="60" cy="60" r="58" fill="#FBF9F0" stroke="#4A4A24" stroke-width="2.5"/>'+ticks
+  +'<circle cx="60" cy="60" r="38" fill="none" stroke="#4A4A24" stroke-width="1.4"/>'
+  +'<defs><path id="aeArc'+size+'" d="M 14.5,60 A 45.5,45.5 0 0 1 105.5,60"/></defs>'
+  +'<text font-family="Georgia,serif" font-size="10.5" letter-spacing="2.4" fill="#4A4A24"><textPath href="#aeArc'+size+'" startOffset="50%" text-anchor="middle">SRM UNIVERSITY</textPath></text>'
+  +'<text x="60" y="103.5" text-anchor="middle" font-family="Georgia,serif" font-size="10" letter-spacing="4" fill="#4A4A24">AP</text>'
+  +'<circle cx="60" cy="47" r="15" fill="#7C9A4E"/><circle cx="47" cy="55" r="11" fill="#8FAF60"/>'
+  +'<circle cx="73" cy="55" r="11" fill="#8FAF60"/><circle cx="53" cy="40" r="9.5" fill="#93B46A"/>'
+  +'<circle cx="67" cy="40" r="9.5" fill="#93B46A"/>'+dots
+  +'<path d="M60,88 L60,60 M60,70 C55,66 52,62 50,55 M60,67 C65,63 68,58 70,52 M60,77 C56,74 53,71 51,66" stroke="#6E5334" stroke-width="2.6" fill="none" stroke-linecap="round"/>'
+  +'<path d="M47,88 Q60,83 73,88" stroke="#6E5334" stroke-width="2" fill="none" stroke-linecap="round"/></svg>'}
+
+/* Browser tab icon (favicon) from the seal */
+(function(){try{var l=document.createElement('link');l.rel='icon';l.type='image/svg+xml';
+l.href='data:image/svg+xml,'+encodeURIComponent(sealSVG(64));document.head.appendChild(l)}catch(e){}})();
+
+/* ---- LOGO: uses your exact image file at EVERY logo location ----
+   Order tried: srm-logo.png → .jpg → .jpeg → .webp (uppercase too).
+   If none exist, the vector seal shows instead (never a broken image). */
+window.__logoErr=function(img){
+  var L=['srm-logo.jpg','srm-logo.jpeg','srm-logo.webp','srm-logo.PNG','srm-logo.JPG'];
+  var i=+(img.dataset.s||0);
+  img.dataset.s=i+1;
+  if(i<L.length){img.src=L[i]}
+  else{img.style.display='none';
+    var f=img.nextElementSibling;
+    if(f&&f.tagName==='SPAN')f.style.display='inline-flex'}};
+function univLogo(h){
+  h=h||110;
+  return '<span style="display:inline-flex;align-items:center;justify-content:center">'
+  +'<img src="srm-logo.png" alt="SRM University AP" data-s="0" style="height:'+h+'px;width:auto;max-width:460px;object-fit:contain" onerror="__logoErr(this)">'
+  +'<span style="display:none">'+sealSVG(Math.min(h,120))+'</span></span>'}
+
+/* ============ inline icons ============ */
+const IC={
+grid:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>',
+users:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+clip:'<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="m9 14 2 2 4-4"/>',
+cal:'<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
+chart:'<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>',
+gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
+out:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>',
+bell:'<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>',
+search:'<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>',
+plus:'<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
+down:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>',
+up2:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>',
+print:'<polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>',
+eye:'<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>',
+pen:'<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>',
+trash:'<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',
+save:'<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>',
+check:'<polyline points="20 6 9 17 4 12"/>',
+check2:'<path d="M18 6 7 17l-5-5"/><path d="m22 10-7.5 7.5L13 16"/>',
+x:'<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>',
+undo:'<polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>',
+uplus:'<path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/>',
+ucheck:'<path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/>',
+ux:'<path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="18" y1="8" x2="23" y2="13"/><line x1="23" y1="8" x2="18" y2="13"/>',
+act:'<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>',
+mail:'<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>',
+phone:'<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>',
+back:'<line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>',
+info:'<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>',
+alert:'<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>',
+okc:'<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',
+server:'<rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/>',
+file:'<path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/>',
+tup:'<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>',
+tdn:'<polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/>',
+menu:'<line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>',
+chl:'<polyline points="15 18 9 12 15 6"/>',
+chr:'<polyline points="9 18 15 12 9 6"/>',
+ch2l:'<polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/>',
+lock:'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+user:'<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>'};
+const ic=(n,s)=>{s=s||18;return '<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:-3px">'+(IC[n]||'')+'</svg>'};
+
+/* ============ CSV ============ */
+const S_COLS=[['id','id',1],['reg_no','regNo'],['name','name'],['department','department'],['semester','semester',1],['email','email'],['phone','phone'],['created_at','createdAt']];
+const A_COLS=[['reg_no','regNo'],['date','date'],['status','status']];
+const csvLine=fs=>fs.map(f=>{f=String(f??'');return /[",\n]/.test(f)?'"'+f.replace(/"/g,'""')+'"':f}).join(',');
+function csvSplit(l){const o=[];let c='',q=false;for(let i=0;i<l.length;i++){const ch=l[i];
+  if(q){if(ch==='"'){if(l[i+1]==='"'){c+='"';i++}else q=false}else c+=ch}
+  else if(ch==='"')q=true;else if(ch===','){o.push(c);c=''}else c+=ch}o.push(c);return o}
+const toCSV=(cols,rows)=>cols.map(c=>c[0]).join(',')+'\n'+rows.map(r=>csvLine(cols.map(c=>r[c[1]]))).join('\n')+'\n';
+function fromCSV(cols,text){const L=text.split(/\r?\n/).filter(l=>l.trim());if(L.length<2)return[];
+  return L.slice(1).map(l=>{const f=csvSplit(l),o={};cols.forEach((c,i)=>o[c[1]]=c[2]?(+f[i]||0):(f[i]||''));return o})}
+
+/* ============ state + managers ============ */
+const Store={students:[],records:[],
+  teacher:{name:'Dr. Anil K. Sharma',email:'faculty@srmuap.ac.in',role:'Faculty Coordinator'},
+  settings:{server:false,url:'http://localhost:18080',rail:false},events:[]};
+let shellBuilt=false,offlineWarned=false;
+
+/* ---- auth: persisted across tabs (12-hour session) ---- */
+function setAuth(){LS.set('ae_auth',JSON.stringify({t:Date.now(),exp:Date.now()+12*3600*1000}))}
+function isAuthed(){try{const a=JSON.parse(LS.get('ae_auth'));return !!(a&&a.exp>Date.now())}catch(e){return false}}
+function clearAuth(){LS.del('ae_auth')}
+
+/* ---- cross-tab change stamp ---- */
+function bumpStamp(){LS.set('ae_stamp',String(Date.now())+'-'+Math.random().toString(36).slice(2))}
+function readStamp(){return LS.get('ae_stamp')||''}
+let lastStamp=null;
+
+/* ---- registered users ---- */
+const DEMO_USER={name:'Dr. Anil K. Sharma',email:'faculty@srmuap.ac.in',pass:'srm12345'};
+function getUsers(){try{return JSON.parse(LS.get('ae_users'))||[]}catch(e){return[]}}
+function saveUsers(u){LS.set('ae_users',JSON.stringify(u));bumpStamp()}
+
+const FM={kS:'ae_students_csv',kA:'ae_attendance_csv',
+  saveStudents(l){LS.set(this.kS,toCSV(S_COLS,l));bumpStamp()},
+  loadStudents(){const t=LS.get(this.kS);return t?fromCSV(S_COLS,t):[]},
+  saveAtt(l){LS.set(this.kA,toCSV(A_COLS,l));bumpStamp()},
+  loadAtt(){const t=LS.get(this.kA);return t?fromCSV(A_COLS,t):[]},
+  clear(){LS.del(this.kS);LS.del(this.kA);bumpStamp()}};
+
+function syncFromDisk(){
+  const st=readStamp();
+  if(lastStamp===null){lastStamp=st;return false}
+  if(st!==lastStamp){
+    lastStamp=st;
+    Store.students=FM.loadStudents();
+    Store.records=FM.loadAtt();
+    try{const t=JSON.parse(LS.get('ae_teacher'));if(t)Store.teacher=t}catch(e){}
+    return true}
+  return false}
+
+window.addEventListener('storage',function(e){
+  if(!e.key||e.key.indexOf('ae_')!==0)return;
+  if(syncFromDisk()){
+    updateBadge();
+    if(shellBuilt){renderRoute()}
+    toast('Synced latest changes from another tab','info')}});
+document.addEventListener('visibilitychange',function(){
+  if(document.hidden)return;
+  if(isAuthed()&&syncFromDisk()){updateBadge();if(shellBuilt)renderRoute()}});
+window.addEventListener('focus',function(){
+  if(isAuthed()&&syncFromDisk()){updateBadge();if(shellBuilt)renderRoute()}});
+
+const SM={
+  validate(s,ignoreId){
+    if(!String(s.regNo||'').trim())throw new Error('Registration number is required');
+    if(!String(s.name||'').trim())throw new Error('Student name is required');
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.email||''))throw new Error('A valid university email is required');
+    const sem=Number(s.semester);if(!sem||sem<1||sem>8)throw new Error('Semester must be between 1 and 8');
+    if(Store.students.some(st=>st.id!==ignoreId&&st.regNo.toLowerCase()===String(s.regNo).toLowerCase()))
+      throw new Error('Registration number "'+s.regNo+'" already exists')},
+  add(s){this.validate(s,-1);
+    const fresh=Object.assign({},s,{id:Store.students.reduce((m,st)=>Math.max(m,st.id),0)+1,
+      semester:Number(s.semester),createdAt:todayStr()});
+    Store.students.push(fresh);
+    FM.saveStudents(Store.students);
+    return fresh},
+  update(id,s){const st=Store.students.find(x=>x.id===id);if(!st)throw new Error('Student not found');
+    this.validate(s,id);const old=st.regNo;
+    Object.assign(st,s,{id:id,semester:Number(s.semester)});
+    if(old!==st.regNo){Store.records.forEach(r=>{if(r.regNo===old)r.regNo=st.regNo});FM.saveAtt(Store.records)}
+    FM.saveStudents(Store.students);
+    return st},
+  del(id){const i=Store.students.findIndex(x=>x.id===id);if(i<0)throw new Error('Student not found');
+    const reg=Store.students[i].regNo;Store.students.splice(i,1);
+    const before=Store.records.length;
+    Store.records=Store.records.filter(r=>r.regNo!==reg);
+    FM.saveStudents(Store.students);FM.saveAtt(Store.records);
+    return before-Store.records.length}};
+
+const AM={
+  mark(date,entries){let created=0,updated=0;
+    for(const e of entries){
+      if(e.status!=='P'&&e.status!=='A')throw new Error('Invalid status for '+e.regNo);
+      if(!Store.students.some(s=>s.regNo===e.regNo))throw new Error('Unknown student: '+e.regNo);
+      const i=Store.records.findIndex(r=>r.regNo===e.regNo&&r.date===date);
+      if(i>=0){Store.records[i].status=e.status;updated++}
+      else{Store.records.push({regNo:e.regNo,date:date,status:e.status});created++}}
+    FM.saveAtt(Store.records);return{created:created,updated:updated}},
+  update(reg,date,status){const i=Store.records.findIndex(r=>r.regNo===reg&&r.date===date);
+    if(i<0)throw new Error('No record exists for '+reg+' on '+date);
+    if(status!=='P'&&status!=='A')throw new Error("Status must be 'P' or 'A'");
+    Store.records[i].status=status;FM.saveAtt(Store.records);return Store.records[i]},
+  del(reg,date){const i=Store.records.findIndex(r=>r.regNo===reg&&r.date===date);
+    if(i<0)throw new Error('No record exists for '+reg+' on '+date);
+    Store.records.splice(i,1);FM.saveAtt(Store.records);return true},
+  byDate(date){return Store.records.filter(r=>r.date===date)},
+  pct(reg,from,to){from=from||'';to=to||'';let p=0,t=0;
+    for(const r of Store.records){if(r.regNo!==reg)continue;
+      if(from&&r.date<from)continue;if(to&&r.date>to)continue;
+      t++;if(r.status==='P')p++}
+    return t===0?null:100*p/t},
+  list(d){d=d||{};let list=Store.records.filter(r=>{
+      if(d.regNo&&r.regNo!==d.regNo)return false;
+      if(d.status&&r.status!==d.status)return false;
+      if(d.from&&r.date<d.from)return false;
+      if(d.to&&r.date>d.to)return false;
+      if(d.q&&!r.regNo.toLowerCase().includes(String(d.q).toLowerCase()))return false;
+      if(d.department){const s=Store.students.find(x=>x.regNo===r.regNo);if(!s||s.department!==d.department)return false}
+      return true});
+    list.sort((a,b)=>b.date.localeCompare(a.date)||a.regNo.localeCompare(b.regNo));
+    const total=list.length,ps=d.pageSize||10,page=Math.max(1,d.page||1);
+    const rows=list.slice((page-1)*ps,page*ps).map(r=>{
+      const s=Store.students.find(x=>x.regNo===r.regNo);
+      return Object.assign({},r,{name:s?s.name:'Unknown',department:s?s.department:'—'})});
+    return{rows:rows,total:total,page:page,pageSize:ps}}};
+
+/* ============ statistics ============ */
+function dashStats(){
+  const t=todayStr();
+  const today=Store.records.filter(r=>r.date===t);
+  const presentT=today.filter(r=>r.status==='P').length,absentT=today.filter(r=>r.status==='A').length;
+  const dates=[...new Set(Store.records.map(r=>r.date))].sort();
+  const weekly=dates.slice(-7).map(d=>{const rs=Store.records.filter(r=>r.date===d);
+    return{date:d,present:rs.filter(r=>r.status==='P').length,absent:rs.filter(r=>r.status==='A').length}});
+  const total=Store.records.length,pAll=Store.records.filter(r=>r.status==='P').length;
+  const overall=total?100*pAll/total:0;
+  const prev=weekly.filter(w=>w.date!==t);
+  const prevAvgP=prev.length?prev.reduce((a,w)=>a+w.present,0)/prev.length:0;
+  const prevAvgA=prev.length?prev.reduce((a,w)=>a+w.absent,0)/prev.length:0;
+  const prevRate=prev.length?prev.reduce((a,w)=>a+(w.present+w.absent?100*w.present/(w.present+w.absent):0),0)/prev.length:0;
+  const recent=[...Store.records].sort((a,b)=>b.date.localeCompare(a.date)||a.regNo.localeCompare(b.regNo)).slice(0,7)
+    .map(r=>{const s=Store.students.find(x=>x.regNo===r.regNo);
+      return Object.assign({},r,{name:s?s.name:'Unknown',department:s?s.department:'—'})});
+  const atRisk=Store.students.map(s=>({regNo:s.regNo,name:s.name,pct:AM.pct(s.regNo)}))
+    .filter(x=>x.pct!=null&&x.pct<75).sort((a,b)=>a.pct-b.pct);
+  return{totalStudents:Store.students.length,
+    deptCount:new Set(Store.students.map(s=>s.department)).size,
+    presentT:presentT,absentT:absentT,overall:overall,weekly:weekly,recent:recent,
+    atRisk:atRisk,atRiskCount:atRisk.length,
+    newCount:Store.students.filter(s=>s.createdAt>=addDays(t,-30)).length,
+    prevAvgP:prevAvgP,prevAvgA:prevAvgA,prevRate:prevRate,markedToday:today.length>0}}
+function repStats(from,to){
+  const recs=Store.records.filter(r=>(!from||r.date>=from)&&(!to||r.date<=to));
+  const total=recs.length,p=recs.filter(r=>r.status==='P').length;
+  const overall=total?100*p/total:0;
+  const wd=new Set(recs.map(r=>r.date)).size;
+  const mm={};recs.forEach(r=>{const k=r.date.slice(0,7);(mm[k]=mm[k]||{p:0,a:0});r.status==='P'?mm[k].p++:mm[k].a++});
+  const months=Object.keys(mm).sort().map(k=>{const v=mm[k],t=v.p+v.a;return{key:k,value:t?Math.round(1000*v.p/t)/10:0}});
+  const wm={};recs.forEach(r=>{const k=weekStart(r.date);(wm[k]=wm[k]||{p:0,a:0});r.status==='P'?wm[k].p++:wm[k].a++});
+  const weeks=Object.keys(wm).sort().slice(-8).map(k=>{const v=wm[k],t=v.p+v.a;return{key:k,value:t?Math.round(1000*v.p/t)/10:0}});
+  const dm={};recs.forEach(r=>{const s=Store.students.find(x=>x.regNo===r.regNo);
+    const k=s?s.department:'Other';(dm[k]=dm[k]||{p:0,a:0});r.status==='P'?dm[k].p++:dm[k].a++});
+  const departments=Object.keys(dm).map(k=>{const v=dm[k],t=v.p+v.a;
+    return{name:k,count:t,value:t?Math.round(1000*v.p/t)/10:0}}).sort((a,b)=>b.value-a.value);
+  const studentRows=Store.students.map(s=>{const rs=recs.filter(r=>r.regNo===s.regNo);
+      const pp=rs.filter(r=>r.status==='P').length;
+      return{regNo:s.regNo,name:s.name,department:s.department,present:pp,absent:rs.length-pp,
+        total:rs.length,pct:rs.length?100*pp/rs.length:null}})
+    .filter(x=>x.total>0).sort((a,b)=>(b.pct||0)-(a.pct||0));
+  return{overall:overall,totalRecords:total,presentCount:p,absentCount:total-p,workingDays:wd,
+    months:months,weeks:weeks,departments:departments,studentRows:studentRows,
+    atRiskCount:studentRows.filter(x=>x.pct!=null&&x.pct<75).length}}
+function studentDetail(reg){
+  const s=Store.students.find(x=>x.regNo===reg);if(!s)throw new Error('Student not found');
+  const rs=Store.records.filter(r=>r.regNo===reg).sort((a,b)=>b.date.localeCompare(a.date));
+  const p=rs.filter(r=>r.status==='P').length;const mm={};
+  rs.forEach(r=>{const k=r.date.slice(0,7);(mm[k]=mm[k]||{p:0,a:0});r.status==='P'?mm[k].p++:mm[k].a++});
+  return{student:s,records:rs,present:p,absent:rs.length-p,workingDays:rs.length,
+    pct:rs.length?100*p/rs.length:null,
+    months:Object.keys(mm).sort().map(k=>({key:k,present:mm[k].p,absent:mm[k].a}))}}
+
+/* ============ demo seed ============ */
+const SEED=[['AP23110010121','Aarav Sharma','Computer Science & Engineering',3,'aarav.sharma@srmuap.edu.in','98765 43210'],
+['AP23110010152','Priya Nair','Computer Science & Engineering',3,'priya.nair@srmuap.edu.in','98765 43211'],
+['AP23110010187','Rohan Mehta','Computer Science & Engineering',3,'rohan.mehta@srmuap.edu.in','98230 11874'],
+['AP23110010203','Ananya Iyer','Computer Science & Engineering',3,'ananya.iyer@srmuap.edu.in','98450 22190'],
+['AP23110010244','Vikram Singh','Mechanical Engineering',3,'vikram.singh@srmuap.edu.in','99001 77321'],
+['AP23110010251','Sara Khan','Electronics & Communication Engineering',3,'sara.khan@srmuap.edu.in','98111 22334'],
+['AP23110010266',"Daniel D'Souza",'Electronics & Communication Engineering',3,'daniel.dsouza@srmuap.edu.in','98222 44556'],
+['AP23110010290','Meera Pillai','Electronics & Communication Engineering',3,'meera.pillai@srmuap.edu.in','98333 66778'],
+['AP23110010312','Aditi Kulkarni','Civil Engineering',3,'aditi.kulkarni@srmuap.edu.in','98444 88990'],
+['AP23110010334','James Mathew','Mechanical Engineering',3,'james.mathew@srmuap.edu.in','98555 11223'],
+['AP23110010358','Ishaan Verma','Civil Engineering',3,'ishaan.verma@srmuap.edu.in','98666 33445'],
+['AP23110010371','Karan Malhotra','Mechanical Engineering',3,'karan.malhotra@srmuap.edu.in','98777 55667'],
+['AP23110010399','Neha Bhatt','Civil Engineering',3,'neha.bhatt@srmuap.edu.in','98888 77889'],
+['AP21110010155','Kabir Anand','Computer Science & Engineering',5,'kabir.anand@srmuap.edu.in','98999 99001'],
+['AP21110010178','Tanvi Deshmukh','Computer Science & Engineering',5,'tanvi.deshmukh@srmuap.edu.in','98000 12345'],
+['AP21110010201','Arjun Reddy','Computer Science & Engineering',5,'arjun.reddy@srmuap.edu.in','98123 45678'],
+['AP21110010233','Nicole Fernandes','Electronics & Communication Engineering',5,'nicole.fernandes@srmuap.edu.in','98234 56789'],
+['AP21110010267','Omar Siddiqui','Electronics & Communication Engineering',5,'omar.siddiqui@srmuap.edu.in','98345 67890']];
+const SEED_PROBS=[95,88,72,93,85,68,87,90,78,82,86,74,91,89,70,84,92,80];
+const SEED_AGE=[3,12,25,40,55,70,90,110,5,18,33,60,80,8,22,47,66,95];
+function seedDemo(){
+  const t=todayStr();
+  Store.students=SEED.map((s,i)=>({id:i+1,regNo:s[0],name:s[1],department:s[2],semester:s[3],
+    email:s[4],phone:s[5],createdAt:addDays(t,-SEED_AGE[i])}));
+  Store.records=[];
+  for(let d=49;d>=0;d--){const date=addDays(t,-d);if(isSun(date))continue;
+    Store.students.forEach((st,i)=>{
+      Store.records.push({regNo:st.regNo,date:date,status:hashStr(st.regNo+date)%100<SEED_PROBS[i]?'P':'A'})})}
+  FM.saveStudents(Store.students);FM.saveAtt(Store.records);
+  LS.set('ae_seeded','1');bumpStamp()}
+
+/* ============ API bridge ============ */
+function fetchT(url,opts,ms){ms=ms||3000;return new Promise(function(res,rej){
+  const t=setTimeout(function(){rej(new TypeError('Network timeout'))},ms);
+  fetch(url,opts).then(function(r){clearTimeout(t);res(r)},function(e){clearTimeout(t);rej(e)})})}
+function local(action,d){d=d||{};
+  switch(action){
+    case 'ping':return{version:'SRM AP Attendance System — Local Engine 3.3'};
+    case 'data.all':return{students:Store.students,records:Store.records};
+    case 'students.get':return studentDetail(d.regNo);
+    case 'students.add':return SM.add(d);
+    case 'students.update':return SM.update(d.id,d);
+    case 'students.delete':return{removedAttendance:SM.del(d.id)};
+    case 'attendance.getByDate':return{records:AM.byDate(d.date)};
+    case 'attendance.mark':
+      if(!d.date)throw new Error('A date is required');
+      if(d.date>todayStr())throw new Error('Cannot mark attendance for a future date');
+      return AM.mark(d.date,d.entries||[]);
+    case 'attendance.update':return AM.update(d.regNo,d.date,d.status);
+    case 'attendance.delete':return AM.del(d.regNo,d.date);
+    case 'attendance.list':return AM.list(d);
+    case 'stats.dashboard':return dashStats();
+    case 'stats.reports':return repStats(d.from,d.to);
+    case 'system.export':return{csv:LS.get(d.file==='students'?FM.kS:FM.kA)||''};
+    case 'system.reset':FM.clear();seedDemo();
+      return{students:Store.students.length,records:Store.records.length};
+    default:throw new Error('Unknown action: '+action)}}
+async function api(action,data){
+  data=data||{};
+  if(Store.settings.server&&Store.settings.url){
+    try{
+      const r=await fetchT(Store.settings.url.replace(/\/+$/,'')+'/api',{method:'POST',
+        headers:{'Content-Type':'application/json'},body:JSON.stringify({action:action,data:data})},3000);
+      const j=await r.json();
+      if(!j.ok)throw new Error(j.error||'Backend request failed');
+      return j.data;
+    }catch(e){
+      if(e instanceof TypeError){
+        if(!offlineWarned){offlineWarned=true;toast('Backend server unreachable — using the built-in local engine','info')}
+      }else throw e}}
+  return local(action,data)}
+async function refreshStore(){
+  const d=await api('data.all');
+  Store.students=d.students;Store.records=d.records;
+  lastStamp=readStamp();updateBadge()}
+
+/* ============ toasts / modals / buttons ============ */
+function toast(msg,type){
+  type=type||'success';
+  const icn=type==='success'?'okc':type==='error'?'alert':'info';
+  const el=document.createElement('div');el.className='toast '+type;
+  el.innerHTML=ic(icn,17)+'<div>'+esc(msg)+'</div><button onclick="this.parentNode.remove()">'+ic('x',14)+'</button>';
+  $('#toasts').appendChild(el);
+  setTimeout(()=>{el.style.transition='opacity .3s';el.style.opacity='0';setTimeout(()=>el.remove(),300)},4200)}
+function openModal(html){$('#modalRoot').innerHTML=
+  '<div class="overlay" onclick="if(event.target===this)AE.closeModal()"><div class="modal">'+html+'</div></div>'}
+function closeModal(){$('#modalRoot').innerHTML=''}
+function confirmDlg(o){
+  openModal('<div class="modalh"><h3>'+esc(o.title)+'</h3><button class="iconbtn" onclick="AE.closeModal()">'+ic('x')+'</button></div>'+
+  '<div class="modalb"><p style="font-size:13.5px;color:var(--ink2);line-height:1.6">'+o.body+'</p></div>'+
+  '<div class="modalf"><button class="btn bg" onclick="AE.closeModal()">Cancel</button>'+
+  '<button class="btn bd" id="cfYes">'+esc(o.label)+'</button></div>');
+  $('#cfYes').onclick=()=>btnLoad($('#cfYes'),'Working…',async()=>{await o.onYes();closeModal()})}
+async function btnLoad(btn,label,fn){
+  if(!btn)return;const old=btn.innerHTML;btn.disabled=true;
+  btn.innerHTML='<span class="spin"></span>'+esc(label);
+  try{await fn()}
+  catch(e){toast(e.message||'Something went wrong','error')}
+  finally{btn.disabled=false;if(btn.isConnected){btn.innerHTML=old}}}
+
+/* ============ SVG charts ============ */
+function spark(vals,color){
+  if(!vals||vals.length<2)return'';
+  const W=92,H=28,mx=Math.max(...vals,1),mn=Math.min(...vals,0);
+  const pts=vals.map((v,i)=>(i*(W/(vals.length-1))).toFixed(1)+','+(H-3-((v-mn)/((mx-mn)||1))*(H-6)).toFixed(1)).join(' ');
+  return '<svg width="'+W+'" height="'+H+'"><polyline points="'+pts+'" fill="none" stroke="'+color+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'}
+function chartLine(el,labels,series,opt){
+  opt=opt||{};if(!el)return;
+  if(!labels.length){el.innerHTML='<div class="empty"><b>No data yet</b><span>Mark attendance to see the trend.</span></div>';return}
+  const W=680,H=260,pl=38,pr=12,pt=14,pb=28,iw=W-pl-pr,ih=H-pt-pb;
+  const n=labels.length;
+  const top=opt.ymax||Math.max(4,Math.ceil(Math.max(1,...series.flatMap(s=>s.data))/4)*4);
+  const X=i=>n<=1?pl+iw/2:pl+i*iw/(n-1),Y=v=>pt+ih-(v/top)*ih;
+  let g='';
+  for(let k=0;k<=4;k++){const y=Y(top*k/4);
+    g+='<line x1="'+pl+'" y1="'+y+'" x2="'+(W-pr)+'" y2="'+y+'" stroke="'+(k===0?'#D8D6C4':'#ECEAE0')+'"/>'+
+       '<text x="'+(pl-8)+'" y="'+(y+4)+'" text-anchor="end" font-size="11" fill="#8B8E79">'+Math.round(top*k/4)+(opt.unit||'')+'</text>'}
+  labels.forEach((l,i)=>{g+='<text x="'+X(i)+'" y="'+(H-8)+'" text-anchor="middle" font-size="11" fill="#8B8E79">'+esc(l)+'</text>'});
+  series.forEach(s=>{
+    if(opt.area)g+='<polygon points="'+pl+','+Y(0)+' '+s.data.map((v,i)=>X(i)+','+Y(v)).join(' ')+' '+X(n-1)+','+Y(0)+'" fill="'+s.color+'" opacity="0.07"/>';
+    g+='<polyline points="'+s.data.map((v,i)=>X(i)+','+Y(v)).join(' ')+'" fill="none" stroke="'+s.color+'" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';
+    s.data.forEach((v,i)=>{g+='<circle cx="'+X(i)+'" cy="'+Y(v)+'" r="4" fill="#fff" stroke="'+s.color+'" stroke-width="2.5"><title>'+esc(labels[i])+' — '+esc(s.name)+': '+v+(opt.unit||'')+'</title></circle>'})});
+  el.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block">'+g+'</svg>'}
+function chartDonut(el,parts,big,sub){
+  if(!el)return;
+  const total=parts.reduce((a,p)=>a+p.v,0)||1,R=58,C=2*Math.PI*R;let off=0,segs='';
+  parts.forEach(p=>{const len=p.v/total*C;
+    segs+='<circle r="'+R+'" cx="80" cy="80" fill="none" stroke="'+p.c+'" stroke-width="21" stroke-dasharray="'+len.toFixed(1)+' '+(C-len).toFixed(1)+'" stroke-dashoffset="'+(-off).toFixed(1)+'" transform="rotate(-90 80 80)"><title>'+esc(p.label)+': '+p.v+' ('+Math.round(100*p.v/total)+'%)</title></circle>';off+=len});
+  el.innerHTML='<div style="display:flex;align-items:center;justify-content:center;gap:22px;flex-wrap:wrap;height:100%">'+
+    '<svg width="160" height="160" viewBox="0 0 160 160">'+segs+
+    '<text x="80" y="77" text-anchor="middle" font-size="20" font-weight="700" fill="#24261A" font-family="Georgia,serif">'+esc(big)+'</text>'+
+    '<text x="80" y="95" text-anchor="middle" font-size="9" font-weight="700" fill="#8B8E79" letter-spacing="1">'+esc(sub)+'</text></svg>'+
+    '<div>'+parts.map(p=>'<div style="font-size:12.5px;font-weight:600;color:#5C5F4C;margin:4px 0">'+
+      '<span class="dot" style="background:'+p.c+';margin-right:7px"></span>'+esc(p.label)+
+      ' <b style="color:#24261A;margin-left:6px">'+p.v.toLocaleString()+' · '+Math.round(100*p.v/total)+'%</b></div>').join('')+'</div></div>'}
+function chartBars(el,items,unit){
+  if(!el)return;unit=unit||'';
+  if(!items.length){el.innerHTML='<div class="empty"><b>No data in range</b></div>';return}
+  const mx=Math.max(1,...items.map(i=>i.value))*1.1;
+  el.innerHTML='<div class="bars">'+items.map(i=>
+    '<div class="barcol" title="'+esc(i.label)+': '+i.value+unit+'">'+
+    '<div class="barv">'+i.value+unit+'</div>'+
+    '<div class="bartrack"><div class="bar" style="height:'+(i.value/mx*100).toFixed(1)+'%;background:'+(i.color||C_O)+'"></div></div>'+
+    '<div class="barl">'+esc(i.label)+'</div></div>').join('')+'</div>'}
+function chartHBars(el,rows){
+  if(!el)return;
+  el.innerHTML=rows.length?rows.map(r=>
+    '<div class="hrow"><span class="hlab">'+esc(r.name)+'</span>'+
+    '<div class="htrack"><div class="hfill'+(r.value<75?' low':'')+'" data-w="'+r.value+'" style="width:0"></div></div>'+
+    '<span class="hval">'+fmt1(r.value)+'%</span></div>').join('')
+    :'<div class="empty"><b>No data in range</b></div>';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    el.querySelectorAll('.hfill').forEach(b=>b.style.width=b.dataset.w+'%')}))}
+function chartRing(el,pct,color){
+  if(!el)return;
+  const R=56,C=2*Math.PI*R,v=Math.max(0,Math.min(100,pct||0));
+  el.innerHTML='<svg width="140" height="140" viewBox="0 0 140 140">'+
+    '<circle cx="70" cy="70" r="'+R+'" fill="none" stroke="#ECEAE0" stroke-width="13"/>'+
+    '<circle cx="70" cy="70" r="'+R+'" fill="none" stroke="'+color+'" stroke-width="13" stroke-linecap="round" stroke-dasharray="'+(v/100*C).toFixed(1)+' '+C.toFixed(1)+'" transform="rotate(-90 70 70)"/>'+
+    '<text x="70" y="68" text-anchor="middle" font-size="20" font-weight="700" fill="#24261A" font-family="Georgia,serif">'+(pct==null?'—':pct.toFixed(1)+'%')+'</text>'+
+    '<text x="70" y="86" text-anchor="middle" font-size="9" font-weight="700" fill="#8B8E79" letter-spacing="1">ATTENDANCE</text></svg>'}
+
+/* ============ shared fragments ============ */
+const avatar=(r,name,cls)=>{const c=avc(r);
+  return '<span class="avatar '+(cls||'')+'" style="background:'+c[0]+';color:'+c[1]+'">'+esc(initials(name))+'</span>'};
+const stuLink=(r,name)=>'<a class="tlink" href="javascript:void 0" onclick="AE.nav(\'student\',\''+jsStr(r)+'\')">'+esc(name)+'</a>';
+const statusChip=st=>st==='P'?'<span class="chip cp">Present</span>':st==='A'?'<span class="chip ca">Absent</span>':'<span class="chip cu">Not marked</span>';
+const rateChip=p=>p==null?'<span class="chip cu">No data</span>':p<75?'<span class="chip ca">At Risk</span>':p<85?'<span class="chip cb">Watch</span>':'<span class="chip cp">Healthy</span>';
+const deltaChip=(v,invert)=>{if(v==null||isNaN(v))return'';
+  const good=invert?v<0:v>=0;
+  return '<span class="chip '+(good?'cp':'ca')+'">'+ic(v>=0?'tup':'tdn',13)+(v>=0?'+':'')+v+'%</span>'};
+const emptyBox=(icn,t,s)=>'<div class="empty">'+ic(icn,34)+'<b>'+esc(t)+'</b>'+(s?'<span>'+esc(s)+'</span>':'')+'</div>';
+const loadingHTML='<div class="loading"><span class="spin"></span>Loading…</div>';
+const phead=(t,sub,acts)=>'<div class="phead"><div><h2>'+t+'</h2><p>'+sub+'</p></div><div class="acts">'+(acts||'')+'</div></div>';
+const selOpts=(arr,sel)=>arr.map(v=>{const val=typeof v==='object'?v.v:v,lab=typeof v==='object'?v.l:v;
+  return '<option value="'+esc(val)+'"'+(String(val)===String(sel)?' selected':'')+'>'+esc(lab)+'</option>'}).join('');
+function updateBadge(){const b=$('#nbadge');if(!b)return;
+  const n=Store.students.map(s=>AM.pct(s.regNo)).filter(p=>p!=null&&p<75).length;
+  b.style.display=n?'flex':'none';b.textContent=n}
+function storageLine(){
+  return storageOK()
+    ?'<div class="storageline ok">'+ic('okc',13)+' Data saving is active on this device</div>'
+    :'<div class="storageline bad">'+ic('alert',13)+' Storage blocked here — changes won\u2019t persist. Open the file directly in a browser.</div>'}
+
+/* ============ login page ============ */
+function pageLogin(){
+  $('#app').innerHTML='<div class="lwrap">'+
+  '<div class="llogo">'+univLogo(110)+'</div>'+
+  '<form class="lcard" id="lcard" onsubmit="return AE.doLogin(event)">'+
+  '<h2 style="text-align:center">Faculty Sign In</h2>'+
+  '<p style="text-align:center">Student Attendance Management System</p>'+
+  '<label class="lbl" for="lemail">University Email</label>'+
+  '<div class="pww"><span>'+ic('mail',16)+'</span><input id="lemail" class="input" type="email" placeholder="faculty@srmuap.ac.in" required></div>'+
+  '<label class="lbl" for="lpass">Password</label>'+
+  '<div class="pww"><span>'+ic('lock',16)+'</span><input id="lpass" class="input" type="password" placeholder="••••••••" required>'+
+  '<button type="button" class="pwe" onclick="AE.togglePass()" title="Show / hide">'+ic('eye',16)+'</button></div>'+
+  '<div class="lrow"><label class="chk"><input type="checkbox" id="lremember"> Remember me</label>'+
+  '<a href="javascript:void 0" onclick="AE.forgot()">Forgot password?</a></div>'+
+  '<div class="ferr" id="lerr" style="display:none"></div>'+
+  '<button class="btn bp blg wfull" id="lbtn" style="margin-top:2px">Sign In</button>'+
+  '<div class="demobox"><div><b>Demo account</b><span>faculty@srmuap.ac.in · srm12345</span></div>'+
+  '<button type="button" class="btn bg" style="padding:6px 11px;font-size:12px" onclick="AE.useDemo()">Autofill</button></div>'+
+  '<div class="lalt">New faculty? <a onclick="AE.nav(\'register\')">Register here</a></div>'+
+  storageLine()+
+  '</form></div>';
+  const rem=LS.get('ae_remember');
+  if(rem){$('#lemail').value=rem;$('#lremember').checked=true}}
+
+/* ============ registration page ============ */
+function pageRegister(){
+  $('#app').innerHTML='<div class="lwrap">'+
+  '<div class="llogo">'+univLogo(96)+'</div>'+
+  '<form class="lcard" id="rcard" onsubmit="return AE.doRegister(event)">'+
+  '<h2 style="text-align:center">Faculty Registration</h2>'+
+  '<p style="text-align:center">Create your attendance portal account</p>'+
+  '<label class="lbl" for="rName">Full Name</label>'+
+  '<div class="pww"><span>'+ic('user',16)+'</span><input id="rName" class="input" type="text" placeholder="e.g. Dr. Priya Ramesh" required></div>'+
+  '<label class="lbl" for="rEmail">University Email</label>'+
+  '<div class="pww"><span>'+ic('mail',16)+'</span><input id="rEmail" class="input" type="email" placeholder="name@srmuap.ac.in" required></div>'+
+  '<label class="lbl" for="rPass">Password</label>'+
+  '<div class="pww"><span>'+ic('lock',16)+'</span><input id="rPass" class="input" type="password" placeholder="Minimum 6 characters" required></div>'+
+  '<label class="lbl" for="rPass2">Confirm Password</label>'+
+  '<div class="pww"><span>'+ic('lock',16)+'</span><input id="rPass2" class="input" type="password" placeholder="Re-enter password" required></div>'+
+  '<div class="ferr" id="rerr" style="display:none"></div>'+
+  '<button class="btn bp blg wfull" id="rbtn" style="margin-top:18px">'+ic('uplus',16)+'Create Account</button>'+
+  '<div class="lalt">Already registered? <a onclick="AE.nav(\'login\')">Sign In</a></div>'+
+  '</form></div>'}
+
+/* ============ shell ============ */
+const NAV=[['dashboard','grid','Dashboard'],['students','users','Students'],['mark','clip','Mark Attendance'],
+  ['calendar','cal','Attendance Calendar'],['records','cal','Attendance Records'],['reports','chart','Reports & Analytics']];
+const TITLES={dashboard:'Dashboard',students:'Students',mark:'Mark Attendance',calendar:'Attendance Calendar',
+  records:'Attendance Records',reports:'Reports & Analytics',settings:'Settings'};
+function buildShell(){
+  $('#app').innerHTML='<div class="app '+(Store.settings.rail?'rail':'')+'" id="shell">'+
+  '<aside class="sidebar">'+
+  '<div class="brand">'+univLogo(42)+
+  '<div class="sb-univ"><b>SRM University AP</b><span>Attendance Portal</span></div>'+
+  '<button class="railbtn" onclick="AE.toggleSidebar()" title="Collapse sidebar">'+ic('ch2l',16)+'</button></div>'+
+  '<div class="navsec">Main Menu</div>'+
+  '<nav class="nav">'+NAV.map(n=>'<a class="nitem" data-nav="'+n[0]+'" href="javascript:void 0" onclick="AE.nav(\''+n[0]+'\')" title="'+n[2]+'">'+ic(n[1],19)+'<span>'+n[2]+'</span></a>').join('')+
+  '<div class="navsec">System</div>'+
+  '<a class="nitem" data-nav="settings" href="javascript:void 0" onclick="AE.nav(\'settings\')" title="Settings">'+ic('gear',19)+'<span>Settings</span></a></nav>'+
+  '<div class="suser"><span class="avatar avn">'+esc(initials(Store.teacher.name))+'</span>'+
+  '<div class="sutext"><b>'+esc(Store.teacher.name)+'</b><span>'+esc(Store.teacher.role)+'</span></div>'+
+  '<button class="suoutb" onclick="AE.logout()">'+ic('out',14)+' Logout</button></div>'+
+  '</aside><div class="scrim" onclick="AE.closeNav()"></div>'+
+  '<main class="main"><header class="topbar">'+
+  '<button class="iconbtn burger" onclick="AE.openNav()">'+ic('menu',20)+'</button>'+
+  '<div class="tbtitle"><div class="crumbs"><b>SRM University AP</b> · Attendance / <span id="crumb">Dashboard</span></div><h1 id="ptitle">Dashboard</h1></div>'+
+  '<div class="tbsearch"><span>'+ic('search',16)+'</span><input id="gq" placeholder="Search students…" autocomplete="off" oninput="AE.searchInput(this.value)" onkeydown="AE.searchKey(event)"><kbd>Ctrl K</kbd>'+
+  '<div class="pop pleft" id="spop"></div></div>'+
+  '<div class="tbright"><span class="tbdate">'+ic('cal',15)+pretty(todayStr())+'</span>'+
+  '<div class="tbitem"><button class="iconbtn" onclick="AE.notif(event)" title="Notifications">'+ic('bell',18)+'<span class="badge" id="nbadge"></span></button><div class="pop" id="npop"></div></div>'+
+  '<div class="tbitem"><button class="avbtn" onclick="AE.userMenu(event)">'+esc(initials(Store.teacher.name))+'</button><div class="pop" id="upop"></div></div>'+
+  '</div></header><div class="page" id="view"></div>'+
+  '<div class="foot">© 2025 <b>SRM University AP</b> · Office of Academic Affairs · Student Attendance Management System · For internal academic use only</div>'+
+  '</main></div>';
+  shellBuilt=true;updateBadge()}
+function closePops(){['#spop','#npop','#upop'].forEach(s=>{const e=$(s);if(e)e.style.display='none'})}
+document.addEventListener('click',e=>{if(!e.target.closest('.tbitem')&&!e.target.closest('.tbsearch'))closePops()});
+document.addEventListener('keydown',e=>{
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();const i=$('#gq');if(i)i.focus()}
+  if(e.key==='Escape'){closeModal();closePops()}});
+
+/* ============ dashboard ============ */
+async function pageDashboard(root){
+  const s=await api('stats.dashboard');
+  const h=new Date().getHours(),greet=h<12?'Good Morning':h<17?'Good Afternoon':'Good Evening';
+  const dP=s.markedToday&&s.prevAvgP>0?Math.round((s.presentT-s.prevAvgP)/s.prevAvgP*100):null;
+  const dA=s.markedToday&&s.prevAvgA>0?Math.round((s.absentT-s.prevAvgA)/s.prevAvgA*100):null;
+  const dO=s.prevRate?Math.round((s.overall-s.prevRate)*10)/10:null;
+  const rateSpark=s.weekly.map(w=>w.present+w.absent?Math.round(100*w.present/(w.present+w.absent)):0);
+  const card=(icn,tint,extra,lab,val,dec,suf,note,dch,sp)=>
+    '<div class="card stat '+extra+'"><div class="stattop"><span class="static '+tint+'">'+ic(icn,18)+'</span><span class="statlab">'+lab+'</span></div>'+
+    '<div class="statval" data-cv="'+val+'" data-cd="'+dec+'" data-cs="'+suf+'">0</div>'+
+    '<div class="statfoot">'+(dch||'')+'<span class="statnote">'+note+'</span>'+(sp?'<span class="statspark">'+sp+'</span>':'')+'</div></div>';
+  root.innerHTML='<div class="dhead"><div><h2>'+greet+', '+esc(profTitle(Store.teacher.name))+'</h2>'+
+  '<p>Here\'s today\'s attendance position across your sections · '+pretty(todayStr())+' · Session 2025–26</p></div>'+
+  '<div class="acts"><a class="btn bg" href="javascript:void 0" onclick="AE.nav(\'calendar\')">'+ic('cal',16)+'Calendar</a>'+
+  '<a class="btn bg" href="javascript:void 0" onclick="AE.nav(\'mark\')">'+ic('clip',16)+'Mark Attendance</a>'+
+  '<button class="btn bp" onclick="AE.openAddStudent()">'+ic('plus',16)+'Add Student</button></div></div>'+
+  (!storageOK()?'<div class="banner warn">'+ic('alert',16)+'<span><b>Storage is blocked in this window.</b> Any changes you make will be lost on reload. Open <span class="mono">index.html</span> directly in a browser to save permanently, or use Settings → Backup.</span></div>':'')+
+  '<div class="stats">'+
+  card('users','tolive','p-o','Total Students',s.totalStudents,0,'','Across '+s.deptCount+' departments',
+    s.newCount>0?'<span class="chip cp">+'+s.newCount+' in 30 days</span>':'','')+
+  card('ucheck','tgreen','p-g','Present Today',s.presentT,0,'',s.markedToday?'Today\'s session':'No session yet',
+    deltaChip(dP,false),spark(s.weekly.map(w=>w.present),C_P))+
+  card('ux','tred','p-r','Absent Today',s.absentT,0,'',s.markedToday?'Today\'s session':'No session yet',
+    deltaChip(dA,true),spark(s.weekly.map(w=>w.absent),C_A))+
+  card('act','tgold','p-o','Overall Attendance',s.overall,1,'%','All recorded sessions',
+    deltaChip(dO,false),spark(rateSpark,C_O))+
+  '</div>'+
+  '<div class="g2a"><div class="card"><div class="cardh"><div><h3>Attendance Overview</h3>'+
+  '<div class="sub">Present vs absent across the last '+s.weekly.length+' recorded sessions</div></div>'+
+  '<div class="legin"><span><span class="dot" style="background:'+C_P+'"></span>Present</span>'+
+  '<span><span class="dot" style="background:'+C_A+'"></span>Absent</span></div></div>'+
+  '<div class="chartwrap" id="ovLine"></div></div>'+
+  '<div class="card"><div class="cardh"><div><h3>Attendance Distribution</h3><div class="sub">All-time record split</div></div></div>'+
+  '<div class="chartwrap" id="ovDonut" style="min-height:240px;display:flex"></div></div></div>'+
+  '<div class="g2b"><div class="card"><div class="cardh"><div><h3>Recent Attendance Activity</h3>'+
+  '<div class="sub">Most recent entries in the register</div></div>'+
+  '<a href="javascript:void 0" onclick="AE.nav(\'records\')" style="font-size:12.5px;font-weight:700;cursor:pointer">View all</a></div>'+
+  (s.recent.length?s.recent.map(r=>'<div class="actrow">'+avatar(r.regNo,r.name,'sm')+
+    '<div class="actinfo"><div class="actname">'+esc(r.name)+'</div><div class="actsub mono">'+esc(r.regNo)+' · '+esc(r.department)+'</div></div>'+
+    '<span class="actdate">'+relDay(r.date)+'</span>'+statusChip(r.status)+'</div>').join('')
+  :emptyBox('clip','No records yet','Save your first attendance session.'))+'</div>'+
+  '<div class="card"><div class="cardh"><div><h3>Quick Actions</h3><div class="sub">Frequent tasks</div></div></div>'+
+  '<button class="qarow" onclick="AE.openAddStudent()"><span class="qaic tolive">'+ic('uplus',18)+'</span>'+
+  '<span><b>Add New Student</b>Register a student with a unique university register number</span><span class="chev">'+ic('chr',18)+'</span></button>'+
+  '<button class="qarow" onclick="AE.nav(\'calendar\')"><span class="qaic tgold">'+ic('cal',18)+'</span>'+
+  '<span><b>Attendance Calendar</b>Edit any date of the current month register</span><span class="chev">'+ic('chr',18)+'</span></button>'+
+  '<button class="qarow" onclick="AE.nav(\'reports\')"><span class="qaic" style="background:var(--olive-s);color:var(--olive-d)">'+ic('chart',18)+'</span>'+
+  '<span><b>View Reports</b>Analytics, exports and printable summaries</span><span class="chev">'+ic('chr',18)+'</span></button>'+
+  (s.atRiskCount?'<div style="padding:13px 18px;display:flex;align-items:center;gap:10px"><span class="chip ca">'+s.atRiskCount+' student'+(s.atRiskCount>1?'s':'')+' below the 75% norm</span>'+
+  '<a href="javascript:void 0" onclick="AE.nav(\'reports\')" style="font-size:12.5px;font-weight:700;cursor:pointer">Review</a></div>':'')+
+  '</div></div>';
+  chartLine($('#ovLine'),s.weekly.map(w=>dow(w.date)+' '+parseD(w.date).getDate()),[
+    {name:'Present',color:C_P,data:s.weekly.map(w=>w.present)},
+    {name:'Absent',color:C_A,data:s.weekly.map(w=>w.absent)}]);
+  chartDonut($('#ovDonut'),[
+    {label:'Present',v:Store.records.filter(r=>r.status==='P').length,c:C_P},
+    {label:'Absent',v:Store.records.filter(r=>r.status==='A').length,c:C_A}],fmt1(s.overall)+'%','ATTENDANCE');
+  root.querySelectorAll('[data-cv]').forEach(el=>countUp(el,parseFloat(el.dataset.cv),+el.dataset.cd,el.dataset.cs))}
+
+/* ============ students ============ */
+const SF={q:'',dept:'',sem:'',sort:'name-asc'};
+function pageStudents(root){
+  root.innerHTML=phead('Student Management','Manage and organise student records across all departments.',
+    '<button class="btn bg" onclick="AE.exportStudents()">'+ic('down',16)+'Export CSV</button>'+
+    '<button class="btn bp" onclick="AE.openAddStudent()">'+ic('plus',16)+'Add Student</button>')+
+  '<div class="card filters"><div class="fsearch"><span>'+ic('search',16)+'</span>'+
+  '<input id="sq" class="input" placeholder="Search by name, register number or email…" value="'+esc(SF.q)+'" oninput="AE.stuSearch(this.value)"></div>'+
+  '<select class="select" style="width:220px" onchange="AE.stuDept(this.value)"><option value="">All Departments</option>'+selOpts(DEPTS,SF.dept)+'</select>'+
+  '<select class="select" style="width:130px" onchange="AE.stuSem(this.value)"><option value="">All Semesters</option>'+selOpts([1,2,3,4,5,6,7,8],SF.sem)+'</select>'+
+  '<select class="select" style="width:160px" onchange="AE.stuSort(this.value)">'+
+  selOpts([{v:'name-asc',l:'Name A → Z'},{v:'name-desc',l:'Name Z → A'},{v:'reg-asc',l:'Register No'},{v:'newest',l:'Newest first'},{v:'sem-asc',l:'Semester'}],SF.sort)+'</select>'+
+  '<span class="fcount" id="scount"></span></div>'+
+  '<div class="card"><div class="tblwrap"><table class="tbl"><thead><tr>'+
+  '<th>#</th><th>Register No.</th><th>Student</th><th>Department</th><th>Sem</th><th>Email</th><th class="thacts">Actions</th></tr></thead>'+
+  '<tbody id="sbody"></tbody></table></div></div>';
+  renderStuRows()}
+function filteredStudents(){
+  let list=[...Store.students];const q=SF.q.toLowerCase();
+  if(q)list=list.filter(s=>(s.name+' '+s.regNo+' '+s.email).toLowerCase().includes(q));
+  if(SF.dept)list=list.filter(s=>s.department===SF.dept);
+  if(SF.sem)list=list.filter(s=>String(s.semester)===SF.sem);
+  const cmp={'name-asc':(a,b)=>a.name.localeCompare(b.name),'name-desc':(a,b)=>b.name.localeCompare(a.name),
+    'reg-asc':(a,b)=>a.regNo.localeCompare(b.regNo),'newest':(a,b)=>b.createdAt.localeCompare(a.createdAt),
+    'sem-asc':(a,b)=>a.semester-b.semester||a.name.localeCompare(b.name)}[SF.sort];
+  return list.sort(cmp)}
+function renderStuRows(){
+  const tb=$('#sbody');if(!tb)return;
+  const list=filteredStudents();
+  $('#scount').textContent=list.length+' of '+Store.students.length+' students';
+  tb.innerHTML=list.length?list.map(s=>'<tr>'+
+    '<td class="mono muted3">'+s.id+'</td><td class="mono" style="font-weight:600">'+esc(s.regNo)+'</td>'+
+    '<td><div class="stucell">'+avatar(s.regNo,s.name,'sm')+stuLink(s.regNo,s.name)+'</div></td>'+
+    '<td>'+esc(s.department)+'</td><td>'+s.semester+'</td><td class="muted">'+esc(s.email)+'</td>'+
+    '<td class="tdacts"><button class="iconbtn" title="View details" onclick="AE.nav(\'student\',\''+jsStr(s.regNo)+'\')">'+ic('eye',16)+'</button>'+
+    '<button class="iconbtn" title="Edit" onclick="AE.openEditStudent('+s.id+')">'+ic('pen',16)+'</button>'+
+    '<button class="iconbtn danger" title="Delete" onclick="AE.confirmDelStudent('+s.id+')">'+ic('trash',16)+'</button></td></tr>').join('')
+  :'<tr><td colspan="7">'+emptyBox('users','No students found','Adjust your filters or add a new student.')+'</td></tr>'}
+function stuModal(s){
+  openModal('<div class="modalh"><h3>'+(s?'Edit Student Record':'Add New Student')+'</h3>'+
+  '<button class="iconbtn" onclick="AE.closeModal()">'+ic('x')+'</button></div>'+
+  '<form onsubmit="return AE.submitStudent(event,'+(s?s.id:'null')+')"><div class="modalb"><div class="fgrid">'+
+  '<div><label class="lbl">Full name *</label><input class="input" id="fName" value="'+esc(s?s.name:'')+'" placeholder="e.g. Priya Nair"></div>'+
+  '<div><label class="lbl">Register number *</label><input class="input" id="fReg" value="'+esc(s?s.regNo:'')+'" placeholder="e.g. AP23110010121"></div>'+
+  '<div><label class="lbl">Department *</label><select class="select" id="fDept">'+selOpts(DEPTS,s?s.department:'Computer Science & Engineering')+'</select></div>'+
+  '<div><label class="lbl">Semester *</label><select class="select" id="fSem">'+selOpts([1,2,3,4,5,6,7,8],s?s.semester:1)+'</select></div>'+
+  '<div class="full"><label class="lbl">University email *</label><input class="input" id="fEmail" value="'+esc(s?s.email:'')+'" placeholder="name@srmuap.edu.in"></div>'+
+  '<div class="full"><label class="lbl">Phone</label><input class="input" id="fPhone" value="'+esc(s?s.phone:'')+'" placeholder="Optional contact number"></div>'+
+  '</div><div class="ferr" id="stuErr" style="display:none"></div></div>'+
+  '<div class="modalf"><button type="button" class="btn bg" onclick="AE.closeModal()">Cancel</button>'+
+  '<button type="submit" class="btn bp" id="stuSave">'+ic('save',16)+(s?'Save Changes':'Add Student')+'</button></div></form>')}
+
+/* ============ mark attendance (shared renderers) ============ */
+function markRows(list,statuses,handler){
+  return list.length?list.map(s=>{const st=statuses[s.regNo]||'';
+    return '<tr><td class="mono" style="font-weight:600">'+esc(s.regNo)+'</td>'+
+    '<td><div class="stucell">'+avatar(s.regNo,s.name,'sm')+'<b style="font-weight:600">'+esc(s.name)+'</b></div></td>'+
+    '<td>'+esc(s.department)+'</td><td>'+statusChip(st)+'</td>'+
+    '<td><div class="mkbtns">'+
+    '<button class="mkbtn p'+(st==='P'?' on':'')+'" onclick="'+handler+'(\''+jsStr(s.regNo)+'\',\'P\')">'+ic('check',14)+'Present</button>'+
+    '<button class="mkbtn a'+(st==='A'?' on':'')+'" onclick="'+handler+'(\''+jsStr(s.regNo)+'\',\'A\')">'+ic('x',14)+'Absent</button></div></td></tr>'}).join('')
+  :'<tr><td colspan="5">'+emptyBox('users','No students match','Try widening the department or semester filter.')+'</td></tr>'}
+function saveBarHTML(c,list,onclick){
+  return '<div class="card savebar"><div class="sbcounts">'+
+  '<span class="sbitem"><span class="dot" style="background:var(--green)"></span>Present <b>'+c.p+'</b></span>'+
+  '<span class="sbitem"><span class="dot" style="background:var(--red)"></span>Absent <b>'+c.a+'</b></span>'+
+  '<span class="sbitem"><span class="dot" style="background:#C9C7B4"></span>Not Marked <b>'+c.u+'</b></span>'+
+  '<span class="sbtotal">Total <b>'+list.length+'</b> shown</span></div>'+
+  '<button class="btn bp blg" onclick="'+onclick+'(this)">'+ic('save',16)+'Save Attendance</button></div>'}
+function countsOf(list,statuses){const c={p:0,a:0,u:0};
+  list.forEach(s=>{const st=statuses[s.regNo];st==='P'?c.p++:st==='A'?c.a++:c.u++});return c}
+
+const MS={date:null,dept:'',sem:'',q:'',statuses:{},existing:0};
+function msReload(){MS.statuses={};MS.existing=0;
+  AM.byDate(MS.date).forEach(r=>{MS.statuses[r.regNo]=r.status;MS.existing++})}
+function msFiltered(){const q=MS.q.toLowerCase();
+  return Store.students.filter(s=>(!MS.dept||s.department===MS.dept)
+    &&(!MS.sem||String(s.semester)===MS.sem)
+    &&(!q||(s.name+' '+s.regNo).toLowerCase().includes(q)))}
+function msRender(){
+  const list=msFiltered();
+  $('#mkbody').innerHTML=markRows(list,MS.statuses,'AE.setMark');
+  $('#mkbar').innerHTML=saveBarHTML(countsOf(list,MS.statuses),list,'AE.saveMark')}
+function pageMark(root){
+  MS.date=MS.date||todayStr();MS.q='';msReload();
+  root.innerHTML=phead('Mark Attendance','Take or update a session — every record saves against the selected date.')+
+  (MS.existing?'<div class="banner">'+ic('info',16)+'<span>A session already exists for <b>&nbsp;'+pretty(MS.date)+'&nbsp;</b> with '+MS.existing+' records — saving will update it.</span></div>':'')+
+  '<div class="card filters">'+
+  '<div class="ffield"><label class="lbl">Date</label><input type="date" class="input" value="'+MS.date+'" max="'+todayStr()+'" onchange="AE.mkDate(this.value)"></div>'+
+  '<div class="ffield" style="min-width:220px"><label class="lbl">Department</label><select class="select" onchange="AE.mkDept(this.value)"><option value="">All Departments</option>'+selOpts(DEPTS,MS.dept)+'</select></div>'+
+  '<div class="ffield"><label class="lbl">Semester</label><select class="select" onchange="AE.mkSem(this.value)"><option value="">All Semesters</option>'+selOpts([1,2,3,4,5,6,7,8],MS.sem)+'</select></div>'+
+  '<div class="fsearch"><label class="lbl">Search student</label><span>'+ic('search',16)+'</span>'+
+  '<input id="mkq" class="input" placeholder="Name or register number…" value="'+esc(MS.q)+'" oninput="AE.mkQ(this.value)"></div>'+
+  '<div class="bulk"><button class="btn bgr" onclick="AE.markAll(\'P\')">'+ic('check2',16)+'Mark All Present</button>'+
+  '<button class="btn brr" onclick="AE.markAll(\'A\')">'+ic('x',16)+'Mark All Absent</button>'+
+  '<button class="btn bg" onclick="AE.resetMark()">'+ic('undo',16)+'Reset</button></div></div>'+
+  '<div class="card"><div class="tblwrap"><table class="tbl"><thead><tr>'+
+  '<th>Register No.</th><th>Student</th><th>Department</th><th>Status</th><th>Action</th></tr></thead>'+
+  '<tbody id="mkbody"></tbody></table></div></div><div id="mkbar"></div>';
+  msRender()}
+
+/* ============ attendance calendar ============ */
+const CALYEAR=(new Date()).getFullYear();
+const CALS={date:null,dept:'',sem:'',q:'',statuses:{},existing:0,month:(new Date()).getMonth()};
+function cFiltered(){const q=CALS.q.toLowerCase();
+  return Store.students.filter(s=>(!CALS.dept||s.department===CALS.dept)
+    &&(!CALS.sem||String(s.semester)===CALS.sem)
+    &&(!q||(s.name+' '+s.regNo).toLowerCase().includes(q)))}
+function calDraw(){
+  const grid=$('#calGrid'),wd=$('#calWd');if(!grid)return;
+  if(wd)wd.innerHTML=DOW.map(d=>'<div class="calwd">'+d+'</div>').join('');
+  const y=CALYEAR,m=CALS.month;
+  const startDow=new Date(y,m,1).getDay();
+  const days=new Date(y,m+1,0).getDate();
+  const mt=$('#mTitle');if(mt)mt.textContent=MONTHS[m]+' '+y;
+  const pb=$('#mPrev'),nb=$('#mNext');
+  if(pb)pb.disabled=(m<=0);if(nb)nb.disabled=(m>=11);
+  let html='';
+  for(let i=0;i<startDow;i++)html+='<div></div>';
+  const today=todayStr();
+  for(let d=1;d<=days;d++){
+    const date=y+'-'+pad(m+1)+'-'+pad(d);
+    const recs=AM.byDate(date);
+    const p=recs.filter(r=>r.status==='P').length,a=recs.filter(r=>r.status==='A').length;
+    const isFuture=date>today,sun=parseD(date).getDay()===0;
+    const off=isFuture||sun;
+    const cls='calcell'+(off?' off':'')+(date===today?' today':'')+(CALS.date===date?' sel':'');
+    html+='<button class="'+cls+'" '+(off?'disabled':'onclick="AE.calOpen(\''+date+'\')"')+
+      ' title="'+(sun?'Sunday — holiday':isFuture?'Future date':'Open/edit this date')+'">'+
+      '<span class="cnum">'+d+'</span>'+
+      (recs.length?'<span class="cfull">'+p+' / '+recs.length+' present</span>':'')+
+      (recs.length?'<span class="cstat"><span class="pp">P '+p+'</span><span class="aa">A '+a+'</span></span>':
+        (off?'':'<span class="cstat"><span class="nn">No session</span></span>'))+
+      '</button>'}
+  grid.innerHTML=html}
+function calPanelRender(){
+  const panel=$('#calPanel');if(!panel)return;
+  if(!CALS.date){panel.innerHTML='';return}
+  const list=cFiltered();
+  panel.innerHTML='<div style="margin-top:18px">'+
+  (CALS.existing?'<div class="banner">'+ic('info',16)+'<span>Existing session on <b>&nbsp;'+pretty(CALS.date)+'&nbsp;</b> — '+CALS.existing+' records. Saving updates them.</span></div>':'')+
+  '<div class="card filters">'+
+  '<div class="ffield" style="min-width:200px"><label class="lbl">Department</label><select class="select" onchange="AE.cDept(this.value)"><option value="">All Departments</option>'+selOpts(DEPTS,CALS.dept)+'</select></div>'+
+  '<div class="ffield"><label class="lbl">Semester</label><select class="select" onchange="AE.cSem(this.value)"><option value="">All Semesters</option>'+selOpts([1,2,3,4,5,6,7,8],CALS.sem)+'</select></div>'+
+  '<div class="fsearch"><label class="lbl">Search student</label><span>'+ic('search',16)+'</span>'+
+  '<input class="input" placeholder="Name or register number…" value="'+esc(CALS.q)+'" oninput="AE.cQ(this.value)"></div>'+
+  '<div class="bulk"><button class="btn bgr" onclick="AE.cMarkAll(\'P\')">'+ic('check2',16)+'Mark All Present</button>'+
+  '<button class="btn brr" onclick="AE.cMarkAll(\'A\')">'+ic('x',16)+'Mark All Absent</button>'+
+  '<button class="btn bg" onclick="AE.cReset()">'+ic('undo',16)+'Reset</button></div></div>'+
+  '<div class="card"><div class="cardh"><h3 style="font-size:15px">Edit session — '+pretty(CALS.date)+' ('+dow(CALS.date)+')</h3></div>'+
+  '<div class="tblwrap"><table class="tbl"><thead><tr>'+
+  '<th>Register No.</th><th>Student</th><th>Department</th><th>Status</th><th>Action</th></tr></thead>'+
+  '<tbody id="cpbody"></tbody></table></div></div>'+
+  '<div id="cpbar"></div></div>';
+  panel.querySelector('#cpbody').innerHTML=markRows(list,CALS.statuses,'AE.cSetMark');
+  panel.querySelector('#cpbar').innerHTML=saveBarHTML(countsOf(list,CALS.statuses),list,'AE.cSave')}
+function pageCalendar(root){
+  CALS.date=CALS.date||null;
+  root.innerHTML=phead('Attendance Calendar','Click a date to view or edit that day\'s register. Sundays and future dates are locked — the calendar covers the current year ('+CALYEAR+'), all 12 months.')+
+  '<div class="card"><div class="cardh">'+
+  '<div class="mnav"><button class="btn bg" id="mPrev" onclick="AE.calPrev()">'+ic('chl',15)+'Prev</button>'+
+  '<span class="mtitle" id="mTitle"></span>'+
+  '<button class="btn bg" id="mNext" onclick="AE.calNext()">Next'+ic('chr',15)+'</button></div>'+
+  '<div class="legin"><span><span class="dot" style="background:var(--green)"></span>Present count</span>'+
+  '<span><span class="dot" style="background:var(--red)"></span>Absent count</span>'+
+  '<span><span class="dot" style="background:var(--gold)"></span>Today</span></div></div>'+
+  '<div class="calhead" id="calWd"></div><div class="calgrid" id="calGrid"></div></div>'+
+  '<div id="calPanel"></div>';
+  calDraw()}
+
+/* ============ records ============ */
+const RF={from:'',to:'',student:'',dept:'',status:'',q:'',page:1};
+async function recRender(){
+  const tb=$('#rbody');if(!tb)return;
+  const res=await api('attendance.list',Object.assign({},RF,{pageSize:10}));
+  tb.innerHTML=res.rows.length?res.rows.map(r=>'<tr>'+
+    '<td><b>'+pShort(r.date)+'</b> <span class="muted3" style="font-size:11.5px">· '+dow(r.date)+' '+r.date.slice(0,4)+'</span></td>'+
+    '<td class="mono" style="font-weight:600">'+esc(r.regNo)+'</td>'+
+    '<td><div class="stucell">'+avatar(r.regNo,r.name,'sm')+stuLink(r.regNo,r.name)+'</div></td>'+
+    '<td>'+esc(r.department)+'</td><td>'+statusChip(r.status)+'</td>'+
+    '<td class="tdacts"><button class="iconbtn" title="Edit record" onclick="AE.openEditRec(\''+jsStr(r.regNo)+'\',\''+r.date+'\')">'+ic('pen',16)+'</button></td></tr>').join('')
+  :'<tr><td colspan="6">'+emptyBox('cal','No records found','Adjust the filters or mark a session first.')+'</td></tr>';
+  const pages=Math.max(1,Math.ceil(res.total/res.pageSize));
+  let btns='';const win=Math.min(5,pages);
+  let st=Math.max(1,RF.page-2),en=Math.min(pages,st+win-1);st=Math.max(1,en-win+1);
+  for(let i=st;i<=en;i++)btns+='<button class="pg'+(i===RF.page?' on':'')+'" onclick="AE.recPage('+i+')">'+i+'</button>';
+  $('#rpager').innerHTML='<div class="pager"><span class="info">Showing '+(res.total?((res.page-1)*res.pageSize+1)+'–'+Math.min(res.page*res.pageSize,res.total):0)+' of '+res.total+' records</span>'+
+  '<div class="pgbtns"><button class="pg"'+(res.page<=1?' disabled':'')+' onclick="AE.recPage('+(res.page-1)+')">'+ic('chl',15)+'</button>'+btns+
+  '<button class="pg"'+(res.page>=pages?' disabled':'')+' onclick="AE.recPage('+(res.page+1)+')">'+ic('chr',15)+'</button></div></div>'}
+function pageRecords(root){
+  root.innerHTML=phead('Attendance Records','Browse, filter and edit the complete attendance history.',
+    '<button class="btn bg" onclick="AE.exportRecords()">'+ic('down',16)+'Export View</button>')+
+  '<div class="card filters">'+
+  '<div class="ffield"><label class="lbl">From</label><input type="date" class="input" value="'+RF.from+'" onchange="AE.recFilter(\'from\',this.value)"></div>'+
+  '<div class="ffield"><label class="lbl">To</label><input type="date" class="input" value="'+RF.to+'" onchange="AE.recFilter(\'to\',this.value)"></div>'+
+  '<div class="ffield" style="min-width:175px"><label class="lbl">Student</label><select class="select" onchange="AE.recFilter(\'student\',this.value)"><option value="">All students</option>'+
+  selOpts([...Store.students].sort((a,b)=>a.name.localeCompare(b.name)).map(s=>({v:s.regNo,l:s.name})),RF.student)+'</select></div>'+
+  '<div class="ffield" style="min-width:200px"><label class="lbl">Department</label><select class="select" onchange="AE.recFilter(\'dept\',this.value)"><option value="">All Departments</option>'+selOpts(DEPTS,RF.dept)+'</select></div>'+
+  '<div class="ffield"><label class="lbl">Status</label><select class="select" onchange="AE.recFilter(\'status\',this.value)">'+
+  selOpts([{v:'',l:'All Statuses'},{v:'P',l:'Present'},{v:'A',l:'Absent'}],RF.status)+'</select></div>'+
+  '<div class="fsearch" style="max-width:190px;flex:none"><label class="lbl">Register No.</label><span>'+ic('search',16)+'</span>'+
+  '<input class="input" placeholder="Search reg no…" value="'+esc(RF.q)+'" oninput="AE.recQ(this.value)"></div>'+
+  '<button class="btn bg" onclick="AE.recClear()">Clear</button></div>'+
+  '<div class="card"><div class="tblwrap"><table class="tbl"><thead><tr>'+
+  '<th>Date</th><th>Register No.</th><th>Student</th><th>Department</th><th>Status</th><th class="thacts">Actions</th></tr></thead>'+
+  '<tbody id="rbody"></tbody></table></div><div id="rpager"></div></div>';
+  recRender()}
+function recEditModal(reg,date,status){
+  const s=Store.students.find(x=>x.regNo===reg)||{name:'Unknown'};
+  openModal('<div class="modalh"><h3>Edit Attendance Record</h3><button class="iconbtn" onclick="AE.closeModal()">'+ic('x')+'</button></div>'+
+  '<div class="modalb"><div style="display:flex;gap:12px;align-items:center;margin-bottom:16px">'+avatar(reg,s.name)+
+  '<div><b style="font-size:14px">'+esc(s.name)+'</b><div class="muted3 mono">'+esc(reg)+' · '+pretty(date)+'</div></div></div>'+
+  '<label class="lbl">Attendance status</label><div class="mkbtns" style="gap:10px">'+
+  '<button class="mkbtn p'+(status==='P'?' on':'')+'" style="padding:10px 18px;font-size:13.5px" id="edP" onclick="AE.pickRec(\'P\')">'+ic('check',15)+'Present</button>'+
+  '<button class="mkbtn a'+(status==='A'?' on':'')+'" style="padding:10px 18px;font-size:13.5px" id="edA" onclick="AE.pickRec(\'A\')">'+ic('x',15)+'Absent</button></div></div>'+
+  '<div class="modalf"><button class="btn bg left" style="color:var(--red-d)" onclick="AE.delRec(\''+jsStr(reg)+'\',\''+date+'\')">'+ic('trash',16)+'Remove Record</button>'+
+  '<button class="btn bp" id="edSave">'+ic('save',16)+'Save Changes</button></div>');
+  $('#edSave').onclick=()=>btnLoad($('#edSave'),'Saving…',async()=>{
+    const st=recEditModal.cur||status;
+    if(st!==status){await api('attendance.update',{regNo:reg,date:date,status:st});await refreshStore();
+      logEvent('Updated '+reg+' on '+date+' → '+(st==='P'?'Present':'Absent'));toast('Record updated successfully')}
+    closeModal();recRender()})}
+recEditModal.cur=null;
+
+/* ============ reports ============ */
+const REP={range:'30',from:addDays(todayStr(),-29),to:todayStr()};
+let lastRep=null,lastRepLabel='';
+async function pageReports(root){
+  const s=await api('stats.reports',{from:REP.from,to:REP.to});
+  lastRep=s;
+  lastRepLabel=REP.range==='custom'?pretty(REP.from)+' → '+pretty(REP.to)
+    :({7:'Last 7 days',30:'Last 30 days',month:'This month',lastmonth:'Last month',all:'All time'})[REP.range];
+  const rc=v=>v<75?C_A:C_O;
+  root.innerHTML=phead('Reports & Analytics','Institution-wide attendance intelligence with exports and printouts.',
+    '<button class="btn bg" onclick="AE.exportReport()">'+ic('down',16)+'Export CSV</button>'+
+    '<button class="btn bg" onclick="AE.printReport()">'+ic('print',16)+'Print Report</button>')+
+  '<div class="card filters">'+
+  '<div class="ffield"><label class="lbl">Date range</label><select class="select" onchange="AE.repRange(this.value)">'+
+  selOpts([{v:'7',l:'Last 7 days'},{v:'30',l:'Last 30 days'},{v:'month',l:'This month'},{v:'lastmonth',l:'Last month'},{v:'all',l:'All time'},{v:'custom',l:'Custom range'}],REP.range)+'</select></div>'+
+  (REP.range==='custom'?'<div class="ffield"><label class="lbl">From</label><input type="date" class="input" value="'+REP.from+'" onchange="AE.repFrom(this.value)"></div>'+
+  '<div class="ffield"><label class="lbl">To</label><input type="date" class="input" value="'+REP.to+'" onchange="AE.repTo(this.value)"></div>':'')+
+  '<span class="fcount">'+esc(lastRepLabel)+' · '+s.workingDays+' working days · '+s.totalRecords.toLocaleString()+' records</span></div>'+
+  '<div class="tiles">'+
+  '<div class="card tile"><div class="tl">Overall Attendance</div><div class="tv" style="color:'+(s.overall>=75?'var(--green-d)':'var(--red-d)')+'">'+fmt1(s.overall)+'%</div>'+
+  '<div style="margin-top:8px">'+(s.atRiskCount?'<span class="chip ca">'+s.atRiskCount+' at risk (&lt;75%)</span>':'<span class="chip cp">All students ≥ 75%</span>')+'</div></div>'+
+  '<div class="card tile"><div class="tl">Working Days</div><div class="tv">'+s.workingDays+'</div><div class="muted3" style="font-size:12px;margin-top:6px">Distinct recorded dates</div></div>'+
+  '<div class="card tile"><div class="tl">Records Marked</div><div class="tv">'+s.totalRecords.toLocaleString()+'</div><div class="muted3" style="font-size:12px;margin-top:6px">'+s.presentCount+' present · '+s.absentCount+' absent</div></div>'+
+  '<div class="card tile"><div class="tl">Present / Absent</div><div class="tv">'+(s.totalRecords?Math.round(100*s.presentCount/s.totalRecords):0)+'%<span style="font-size:14px;color:var(--ink3)"> / '+(s.totalRecords?100-Math.round(100*s.presentCount/s.totalRecords):0)+'%</span></div>'+
+  '<div style="margin-top:10px" class="rtrack"><div class="rfill" style="width:'+s.overall.toFixed(1)+'%;background:var(--green)"></div></div></div></div>'+
+  '<div class="card" style="margin-bottom:18px"><div class="cardh"><div><h3>Monthly Attendance Rate</h3>'+
+  '<div class="sub">(Present Days ÷ Total Working Days) × 100, per calendar month</div></div></div>'+
+  '<div class="chartwrap" id="rpMonths"></div></div>'+
+  '<div class="g2a" style="margin-bottom:18px">'+
+  '<div class="card"><div class="cardh"><div><h3>Weekly Attendance Trend</h3><div class="sub">Rate per week (weeks starting Monday)</div></div></div>'+
+  '<div class="chartwrap" id="rpWeekly"></div></div>'+
+  '<div class="card"><div class="cardh"><div><h3>Present vs Absent</h3><div class="sub">Distribution in range</div></div></div>'+
+  '<div class="chartwrap" id="rpDonut" style="min-height:240px;display:flex"></div></div></div>'+
+  '<div class="card" style="margin-bottom:18px"><div class="cardh"><div><h3>Department-wise Attendance</h3>'+
+  '<div class="sub">Rate per department (red bars are below the 75% norm)</div></div></div><div id="rpDept"></div></div>'+
+  '<div class="card"><div class="cardh"><div><h3>Student-wise Attendance</h3><div class="sub">Sorted by rate — measured against the 75% norm</div></div></div>'+
+  '<div class="tblwrap"><table class="tbl" style="min-width:740px"><thead><tr>'+
+  '<th>Student</th><th>Register No.</th><th>Department</th><th>Present</th><th>Absent</th><th style="min-width:190px">Rate</th><th>Status</th></tr></thead><tbody>'+
+  (s.studentRows.length?s.studentRows.map(r=>'<tr>'+
+    '<td><div class="stucell">'+avatar(r.regNo,r.name,'sm')+stuLink(r.regNo,r.name)+'</div></td>'+
+    '<td class="mono" style="font-weight:600">'+esc(r.regNo)+'</td><td>'+esc(r.department)+'</td>'+
+    '<td>'+r.present+'</td><td>'+r.absent+'</td>'+
+    '<td><div style="display:flex;align-items:center;gap:10px"><div class="rtrack"><div class="rfill'+(r.pct<75?' low':'')+'" style="width:'+(r.pct||0).toFixed(1)+'%"></div></div>'+
+    '<b style="font-size:12.5px;min-width:46px;text-align:right">'+fmt1(r.pct)+'%</b></div></td>'+
+    '<td>'+rateChip(r.pct)+'</td></tr>').join('')
+  :'<tr><td colspan="7">'+emptyBox('chart','No data in range','Widen the date range to include records.')+'</td></tr>')+
+  '</tbody></table></div></div>';
+  chartBars($('#rpMonths'),s.months.map(m=>({label:mLbl(m.key),value:m.value,color:rc(m.value)})),'%');
+  chartLine($('#rpWeekly'),s.weeks.map(w=>pShort(w.key)),
+    [{name:'Rate %',color:C_O,data:s.weeks.map(w=>w.value)}],{area:true,ymax:100,unit:'%'});
+  chartDonut($('#rpDonut'),[{label:'Present',v:s.presentCount,c:C_P},{label:'Absent',v:s.absentCount,c:C_A}],fmt1(s.overall)+'%','ATTENDANCE');
+  chartHBars($('#rpDept'),s.departments.map(d=>({name:d.name,value:d.value})))}
+function doPrint(){
+  if(!lastRep){toast('Open the Reports page first','info');return}
+  const s=lastRep;
+  $('#printArea').innerHTML=
+  '<div style="display:flex;align-items:center;gap:16px;border-bottom:3px solid #4A4A24;padding-bottom:12px;margin-bottom:14px">'+
+  univLogo(72)+
+  '<div style="flex:1">'+
+  '<div style="font-family:Georgia,serif;font-size:19px;font-weight:700;color:#37371A">SRM University AP — Andhra Pradesh</div>'+
+  '<div style="font-size:12px;color:#555">Office of Academic Affairs · Student Attendance Report · Academic Session 2025–26</div>'+
+  '<div style="font-size:11px;color:#777">Range: '+esc(lastRepLabel)+' · Generated: '+pretty(todayStr())+' · Formula: (Present Days ÷ Total Working Days) × 100</div>'+
+  '</div></div>'+
+  '<h2>Summary</h2><table><tr><th>Overall</th><th>Working Days</th><th>Records</th><th>Present</th><th>Absent</th><th>At Risk</th></tr>'+
+  '<tr><td><b>'+fmt1(s.overall)+'%</b></td><td>'+s.workingDays+'</td><td>'+s.totalRecords+'</td><td>'+s.presentCount+'</td><td>'+s.absentCount+'</td><td>'+s.atRiskCount+'</td></tr></table>'+
+  '<h2>Monthly Attendance</h2><table><tr><th>Month</th><th>Rate</th></tr>'+
+  (s.months.map(m=>'<tr><td>'+esc(mLbl(m.key))+'</td><td>'+m.value+'%</td></tr>').join('')||'<tr><td colspan="2">—</td></tr>')+'</table>'+
+  '<h2>Department-wise</h2><table><tr><th>Department</th><th>Records</th><th>Rate</th></tr>'+
+  (s.departments.map(d=>'<tr><td>'+esc(d.name)+'</td><td>'+d.count+'</td><td>'+d.value+'%</td></tr>').join('')||'<tr><td colspan="3">—</td></tr>')+'</table>'+
+  '<h2>Student-wise</h2><table><tr><th>Student</th><th>Register No.</th><th>Department</th><th>Present</th><th>Absent</th><th>Rate</th><th>Status</th></tr>'+
+  s.studentRows.map(r=>'<tr><td>'+esc(r.name)+'</td><td>'+esc(r.regNo)+'</td><td>'+esc(r.department)+'</td><td>'+r.present+'</td><td>'+r.absent+'</td><td>'+fmt1(r.pct)+'%</td><td>'+(r.pct==null?'—':r.pct<75?'At Risk':r.pct<85?'Watch':'Healthy')+'</td></tr>').join('')+'</table>'+
+  '<p style="margin-top:10px;font-size:10px;color:#666">Computer-generated report · Student Attendance Management System, SRM University AP · Faculty: '+esc(Store.teacher.name)+'</p>';
+  window.print()}
+
+/* ============ student profile ============ */
+async function pageProfile(root,reg){
+  let d;
+  try{d=await api('students.get',{regNo:reg})}
+  catch(e){
+    root.innerHTML=phead('Student Profile','')+'<div class="card">'+emptyBox('ux','Student not found','The register number may have been deleted.')+
+    '<div style="text-align:center;padding-bottom:24px"><button class="btn bg" onclick="AE.nav(\'students\')">'+ic('back',16)+'Back to Students</button></div></div>';return}
+  const s=d.student;
+  const mx=Math.max(1,...d.months.map(m=>m.present+m.absent));
+  root.innerHTML=phead('Student Profile','Complete personal and attendance record for this student.',
+    '<button class="btn bg" onclick="AE.nav(\'students\')">'+ic('back',16)+'Back to Students</button>'+
+    '<button class="btn bp" onclick="AE.nav(\'mark\')">'+ic('clip',16)+'Mark Attendance</button>')+
+  '<div class="card" style="padding:22px;margin-bottom:16px;display:flex;gap:18px;align-items:center;flex-wrap:wrap">'+
+  avatar(s.regNo,s.name,'lg')+
+  '<div style="flex:1;min-width:230px"><h3 style="font-size:19px;color:#37371A">'+esc(s.name)+'</h3>'+
+  '<div class="mono" style="color:var(--ink2);margin:3px 0 8px">'+esc(s.regNo)+' · '+esc(s.department)+' · Semester '+s.semester+'</div></div>'+
+  '<div id="pfRing"></div></div>'+
+  '<div class="card" style="margin-bottom:16px"><div class="cardh"><h3 style="font-size:15px">Personal Details</h3></div>'+
+  '<div class="detail-grid">'+
+  '<div><span class="lbl">Register Number</span><div class="mono">'+esc(s.regNo)+'</div></div>'+
+  '<div><span class="lbl">Student ID</span><div>#'+s.id+'</div></div>'+
+  '<div><span class="lbl">Department</span><div>'+esc(s.department)+'</div></div>'+
+  '<div><span class="lbl">Semester</span><div>Semester '+s.semester+'</div></div>'+
+  '<div><span class="lbl">University Email</span><div>'+esc(s.email)+'</div></div>'+
+  '<div><span class="lbl">Phone</span><div>'+esc(s.phone||'—')+'</div></div>'+
+  '<div><span class="lbl">Enrolled On</span><div>'+pretty(s.createdAt)+'</div></div>'+
+  '<div><span class="lbl">Registered By</span><div>'+esc(Store.teacher.name)+'</div></div>'+
+  '<div><span class="lbl">Institution</span><div>SRM University AP</div></div>'+
+  '</div></div>'+
+  '<div class="tiles">'+
+  '<div class="card tile"><div class="tl">Attendance Rate</div><div class="tv" style="color:'+(d.pct!=null&&d.pct<75?'var(--red-d)':'var(--green-d)')+'">'+fmt1(d.pct)+'%</div><div style="margin-top:8px">'+rateChip(d.pct)+'</div></div>'+
+  '<div class="card tile"><div class="tl">Working Days</div><div class="tv">'+d.workingDays+'</div><div class="muted3" style="font-size:12px;margin-top:6px">Days with a record</div></div>'+
+  '<div class="card tile"><div class="tl">Present Days</div><div class="tv" style="color:var(--green-d)">'+d.present+'</div><div class="muted3" style="font-size:12px;margin-top:6px">'+(d.workingDays?Math.round(100*d.present/d.workingDays):0)+'% of sessions</div></div>'+
+  '<div class="card tile"><div class="tl">Absent Days</div><div class="tv" style="color:var(--red-d)">'+d.absent+'</div><div class="muted3" style="font-size:12px;margin-top:6px">'+(d.workingDays?Math.round(100*d.absent/d.workingDays):0)+'% of sessions</div></div></div>'+
+  '<div class="stflex">'+
+  '<div class="card"><div class="cardh"><div><h3>Monthly Attendance</h3><div class="sub">Present vs absent marks per month</div></div>'+
+  '<div class="legin"><span><span class="dot" style="background:'+C_P+'"></span>Present</span>'+
+  '<span><span class="dot" style="background:'+C_A+'"></span>Absent</span></div></div>'+
+  '<div class="chartwrap"><div class="bars">'+
+  (d.months.length?d.months.map(m=>'<div class="barcol" title="'+esc(mLbl(m.key))+' — Present '+m.present+', Absent '+m.absent+'">'+
+    '<div class="barv"><span style="color:'+C_P+'">'+m.present+'</span> / <span style="color:'+C_A+'">'+m.absent+'</span></div>'+
+    '<div class="bartrack"><div class="bar" style="height:'+((m.present/mx)*50).toFixed(1)+'%;background:'+C_P+'"></div>'+
+    '<div class="bar" style="height:'+((m.absent/mx)*50).toFixed(1)+'%;background:'+C_A+'"></div></div>'+
+    '<div class="barl">'+esc(mLbl(m.key))+'</div></div>').join('')
+  :'<div class="empty"><b>No data yet</b></div>')+'</div></div></div>'+
+  '<div class="card"><div class="cardh"><div><h3>Complete Attendance History</h3><div class="sub">'+d.records.length+' records · newest first</div></div></div>'+
+  '<div style="max-height:340px;overflow-y:auto">'+
+  (d.records.length?d.records.map(r=>'<div class="actrow">'+
+    '<span style="display:flex;align-items:center;gap:7px;width:132px">'+ic('cal',14)+
+    '<b style="font-size:12.5px">'+pShort(r.date)+'</b><span class="muted3" style="font-size:11px">'+dow(r.date)+'</span></span>'+
+    statusChip(r.status)+'</div>').join('')
+  :emptyBox('cal','No history yet','No records exist for this student.'))+'</div></div></div>';
+  chartRing($('#pfRing'),d.pct,d.pct!=null&&d.pct<75?C_A:C_P)}
+
+/* ============ settings ============ */
+function pageSettings(root){
+  root.innerHTML=phead('Settings','Faculty profile, backend connection and data management.')+
+  '<div class="stcol">'+
+  '<div class="card"><div class="cardh"><div><h3>Faculty Profile</h3><div class="sub">Shown on the dashboard, topbar and reports</div></div></div>'+
+  '<form onsubmit="return AE.saveTeacher(event)"><div class="modalb" style="padding-bottom:6px"><div class="fgrid">'+
+  '<div><label class="lbl">Full name</label><input class="input" id="tName" value="'+esc(Store.teacher.name)+'"></div>'+
+  '<div><label class="lbl">University email</label><input class="input" id="tEmail" value="'+esc(Store.teacher.email)+'"></div>'+
+  '<div><label class="lbl">Role</label><input class="input" value="'+esc(Store.teacher.role)+'" disabled style="background:#F5F4E9"></div>'+
+  '</div></div><div class="modalf" style="border-top:1px solid var(--line2)"><button class="btn bp" id="tSave">'+ic('save',16)+'Save Profile</button></div></form></div>'+
+  '<div class="card"><div class="cardh"><div><h3>Backup &amp; Restore</h3><div class="sub">Guaranteed persistence — carry your complete register across tabs, browsers or machines</div></div></div>'+
+  '<div class="setrow"><div class="srm"><b>Download full backup</b><p>One JSON file containing every student, attendance record, faculty account and profile setting. '+(storageOK()?'Storage is working normally on this device — backups are optional but recommended.':'<b style="color:var(--red-d)">Storage is blocked here — use backup before closing this tab!</b>')+'</p></div>'+
+  '<button class="btn bg" onclick="AE.exportBackup()">'+ic('down',16)+'Download Backup</button></div>'+
+  '<div class="setrow"><div class="srm"><b>Restore from backup</b><p>Select a previously downloaded <span class="mono">attendease_backup.json</span> file. This replaces all current data.</p></div>'+
+  '<button class="btn bg" onclick="document.getElementById(\'bkFile\').click()">'+ic('up2',16)+'Restore Backup</button>'+
+  '<input type="file" id="bkFile" accept=".json,application/json" style="display:none" onchange="AE.importBackup(this)"></div></div>'+
+  '<div class="card"><div class="cardh"><div><h3>Backend Server (C++ / Crow)</h3><div class="sub">Execute all data operations through the C++17 REST API with CSV file handling</div></div>'+
+  '<div class="srow"><span class="sdot'+(Store.settings.server?' on':'')+'" id="svDot"></span><span id="svTxt">'+(Store.settings.server?'C++ backend active':'Built-in local engine')+'</span></div></div>'+
+  '<div class="setrow"><div class="srm"><b>Use backend server</b><p>When enabled, every request is sent as JSON to the Crow server, which performs the file-handling operations on disk and returns the result.</p></div>'+
+  '<label class="switch"><input type="checkbox" id="svToggle"'+(Store.settings.server?' checked':'')+' onchange="AE.setServer(this.checked)"><span class="sl"></span></label></div>'+
+  '<div class="setrow"><div class="srm"><b>Server URL</b><p>Default is http://localhost:18080 — start the backend, then test the connection.</p>'+
+  '<input class="input" id="svUrl" style="max-width:340px;margin-top:10px" value="'+esc(Store.settings.url)+'"></div>'+
+  '<button class="btn bg" id="svTest" onclick="AE.testConn(this)">'+ic('server',16)+'Test Connection</button></div></div>'+
+  '<div class="card"><div class="cardh"><div><h3>Data Management</h3><div class="sub">CSV storage — '+Store.students.length+' students · '+Store.records.length.toLocaleString()+' attendance records</div></div></div>'+
+  '<div class="setrow"><div class="srm"><b>Export data files</b><p>Download the exact CSV text used for persistence (identical format to the C++ backend\u2019s data/ files).</p></div>'+
+  '<button class="btn bg" onclick="AE.exportFile(\'students\')">'+ic('file',16)+'students.csv</button>'+
+  '<button class="btn bg" onclick="AE.exportFile(\'attendance\')">'+ic('file',16)+'attendance.csv</button></div>'+
+  '<div class="setrow"><div class="srm"><b>Registered faculty accounts</b><p>'+getUsers().length+' account(s) registered on this device besides the demo account.</p></div>'+
+  '<button class="btn bg" style="color:var(--red-d)" onclick="AE.resetData(this)">'+ic('undo',16)+'Reset Data</button></div></div></div>'}
+
+/* ============ NAVIGATION CORE ============ */
+let CurrentPage={key:'login',param:null};
+function renderRoute(){
+  try{closePops()}catch(e){}
+  if(!isAuthed()){
+    shellBuilt=false;
+    if(CurrentPage.key==='register'){pageRegister()}
+    else{CurrentPage={key:'login',param:null};pageLogin()}
+    window.scrollTo(0,0);return}
+  if(CurrentPage.key==='login'||CurrentPage.key==='register')CurrentPage={key:'dashboard',param:null};
+  if(!shellBuilt){
+    try{buildShell()}
+    catch(e){showBootError(e);return}}
+  const key=CurrentPage.key,param=CurrentPage.param;
+  document.querySelectorAll('.nitem').forEach(a=>a.classList.toggle('active',a.dataset.nav===key||(key==='student'&&a.dataset.nav==='students')));
+  const title=TITLES[key]||'Student Profile';
+  const crumb=key==='student'?'Students / Profile':title;
+  $('#ptitle').textContent=title;$('#crumb').textContent=crumb;
+  $('#shell').classList.remove('open');
+  const pv=$('#view');
+  pv.innerHTML=loadingHTML;
+  pv.style.animation='none';void pv.offsetWidth;pv.style.animation='';
+  const watchdog=setTimeout(function(){
+    if($('#view .loading')){$('#view').innerHTML='<div class="card">'+emptyBox('alert','Page is taking unusually long','An error may have occurred. Reload the page and try again.')+'</div>'}
+  },4000);
+  (async()=>{
+    try{
+      if(key==='dashboard')await pageDashboard(pv);
+      else if(key==='students')pageStudents(pv);
+      else if(key==='mark')pageMark(pv);
+      else if(key==='calendar')pageCalendar(pv);
+      else if(key==='records')pageRecords(pv);
+      else if(key==='reports')await pageReports(pv);
+      else if(key==='settings')pageSettings(pv);
+      else if(key==='student')await pageProfile(pv,param);
+      else pv.innerHTML='<div class="card">'+emptyBox('search','Page not found','Use the sidebar to navigate.')+'</div>';
+      clearTimeout(watchdog);
+    }catch(e){
+      clearTimeout(watchdog);
+      pv.innerHTML='<div class="card">'+emptyBox('alert','Something went wrong',(e&&e.message)||'Unexpected error')+'</div>';
+      toast((e&&e.message)||'Unexpected error','error')}
+    window.scrollTo(0,0)})()}
+function navTo(key,param){
+  try{
+    CurrentPage={key:key,param:param||null};
+    try{const nh='#/'+key+(param?'/'+encodeURIComponent(param):'');if(location.hash!==nh)location.hash=nh}catch(e){}
+    renderRoute();
+  }catch(e){showBootError(e)}}
+function parseHash(){
+  const h=(location.hash||'').replace(/^#\/?/,'');
+  const parts=h.split('/');
+  return{key:parts[0]||'dashboard',param:parts[1]?decodeURIComponent(parts[1]):null}}
+function route(){
+  try{CurrentPage=parseHash()}catch(e){CurrentPage={key:'dashboard',param:null}}
+  renderRoute()}
+window.addEventListener('hashchange',function(){
+  try{const p=parseHash();
+    if(p.key!==CurrentPage.key||((p.param||'')!==(CurrentPage.param||'')))route()}catch(e){}});
+
+/* ============ UI action handlers ============ */
+const AE={
+  nav:navTo,
+  closeModal,
+  toggleSidebar(){const sh=$('#shell');sh.classList.toggle('rail');
+    Store.settings.rail=sh.classList.contains('rail');
+    LS.set('ae_settings',JSON.stringify(Store.settings))},
+  openNav(){$('#shell').classList.add('open')},
+  closeNav(){$('#shell').classList.remove('open')},
+  togglePass(){const p=$('#lpass');p.type=p.type==='password'?'text':'password'},
+  useDemo(){$('#lemail').value=DEMO_USER.email;$('#lpass').value=DEMO_USER.pass;$('#lerr').style.display='none'},
+  forgot(){toast('Password reset is handled by ICT Services in the production build — use the demo account below.','info')},
+  async doLogin(e){
+    e.preventDefault();
+    const email=$('#lemail').value.trim().toLowerCase(),pass=$('#lpass').value,err=$('#lerr');
+    return btnLoad($('#lbtn'),'Signing in…',async()=>{
+      await new Promise(r=>setTimeout(r,380));
+      let user=null;
+      const users=getUsers();
+      for(const u of users){if(u.email.toLowerCase()===email&&u.pass===pass){user=u;break}}
+      if(!user&&email===DEMO_USER.email&&pass===DEMO_USER.pass)user=DEMO_USER;
+      if(!user){
+        err.textContent='Invalid email or password. Register a new account or use the demo badge.';
+        err.style.display='block';const c=$('#lcard');c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake');
+        throw new Error('__silent__')}
+      if($('#lremember').checked)LS.set('ae_remember',email);else LS.del('ae_remember');
+      Store.teacher={name:user.name,email:user.email,role:'Faculty Coordinator'};
+      LS.set('ae_teacher',JSON.stringify(Store.teacher));bumpStamp();
+      setAuth();
+      shellBuilt=false;
+      logEvent('Signed in as '+email);
+      navTo('dashboard');
+      toast('Welcome, '+Store.teacher.name);
+    }).catch(x=>{if(x.message!=='__silent__')throw x}),false},
+  async doRegister(e){
+    e.preventDefault();
+    const name=$('#rName').value.trim(),email=$('#rEmail').value.trim().toLowerCase(),
+      pass=$('#rPass').value,pass2=$('#rPass2').value,err=$('#rerr');
+    err.style.display='none';
+    if(!name||!email||!pass){err.textContent='All fields are required.';err.style.display='block';return false}
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){err.textContent='Please enter a valid email address.';err.style.display='block';return false}
+    if(pass.length<6){err.textContent='Password must be at least 6 characters.';err.style.display='block';return false}
+    if(pass!==pass2){err.textContent='Passwords do not match.';err.style.display='block';return false}
+    const users=getUsers();
+    if(users.some(u=>u.email.toLowerCase()===email)||email===DEMO_USER.email){
+      err.textContent='An account with this email already exists. Please sign in.';err.style.display='block';return false}
+    return btnLoad($('#rbtn'),'Creating…',async()=>{
+      users.push({name:name,email:email,pass:pass});
+      saveUsers(users);
+      logEvent('Registered new faculty: '+name);
+      toast('Account created — please sign in, '+name.split(' ').slice(-1)[0]);
+      LS.set('ae_remember',email);
+      navTo('login');
+    }),false},
+  logout(){clearAuth();shellBuilt=false;navTo('login');toast('You have been signed out','info')},
+  searchInput:debounce(function(q){
+    const pop=$('#spop');q=q.trim().toLowerCase();
+    if(!q){pop.style.display='none';return}
+    const res=Store.students.filter(s=>(s.name+' '+s.regNo).toLowerCase().includes(q)).slice(0,6);
+    pop.innerHTML=res.length?res.map(s=>'<div class="prow" onclick="AE.nav(\'student\',\''+jsStr(s.regNo)+'\')">'+avatar(s.regNo,s.name,'sm')+
+      '<div><div style="font-weight:600;font-size:13px">'+esc(s.name)+'</div><div class="muted3 mono">'+esc(s.regNo)+' · '+esc(s.department)+'</div></div></div>').join('')
+    :'<div class="empty" style="padding:24px"><b>No matches</b><span>Try a name or register number.</span></div>';
+    pop.style.display='block'},120),
+  searchGo(reg){closePops();$('#gq').value='';navTo('student',reg)},
+  searchKey(e){if(e.key!=='Enter')return;e.preventDefault();
+    const q=$('#gq').value.trim().toLowerCase();if(!q)return;
+    const f=Store.students.find(s=>(s.name+' '+s.regNo).toLowerCase().includes(q));if(f)navTo('student',f.regNo)},
+  notif(e){e.stopPropagation();closePops();
+    const s=dashStats();
+    const rows=[...s.atRisk.slice(0,5).map(a=>({t:a.name+"'s attendance is "+a.pct.toFixed(1)+'%',sub:'Below the 75% norm · '+a.regNo,c:'ca',l:'At Risk'})),
+      ...Store.events.map(ev=>({t:ev.msg,sub:'Today · '+ev.t,c:'cb',l:'Activity'}))];
+    $('#npop').innerHTML='<div class="poph">Notifications '+(s.atRiskCount?'<span class="chip ca">'+s.atRiskCount+'</span>':'')+'</div>'+
+      '<div class="popb">'+(rows.length?rows.map(r=>'<div class="prow" style="cursor:default"><div style="flex:1"><div class="t">'+esc(r.t)+'</div><div class="s">'+esc(r.sub)+'</div></div><span class="chip '+r.c+'">'+r.l+'</span></div>').join('')
+      :'<div class="empty" style="padding:30px"><b>All clear</b><span>No notifications right now.</span></div>')+'</div>';
+    $('#npop').style.display='block'},
+  userMenu(e){e.stopPropagation();closePops();
+    $('#upop').innerHTML='<div class="poph" style="gap:12px"><span class="avatar avn">'+esc(initials(Store.teacher.name))+'</span>'+
+    '<div><div style="font-weight:700;font-size:13.5px">'+esc(Store.teacher.name)+'</div><div class="muted3" style="font-size:11.5px">'+esc(Store.teacher.email)+'</div></div></div>'+
+    '<div class="popb"><div class="prow" onclick="AE.closePops();AE.nav(\'settings\')">'+ic('gear',17)+'<div class="t">Settings</div></div>'+
+    '<div class="prow" onclick="AE.closePops();AE.logout()">'+ic('out',17)+'<div class="t" style="color:var(--red-d)">Logout</div></div></div>';
+    $('#upop').style.display='block'},
+  closePops,
+  openAddStudent(){stuModal(null)},
+  openEditStudent(id){stuModal(Store.students.find(s=>s.id===id))},
+  async submitStudent(e,id){
+    e.preventDefault();
+    const data={name:$('#fName').value.trim(),regNo:$('#fReg').value.trim().toUpperCase(),
+      department:$('#fDept').value,semester:Number($('#fSem').value),
+      email:$('#fEmail').value.trim(),phone:$('#fPhone').value.trim()};
+    const errEl=$('#stuErr');errEl.style.display='none';
+    if(!data.name||!data.regNo||!data.email){errEl.textContent='Name, register number and email are required.';errEl.style.display='block';return false}
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)){errEl.textContent='Please enter a valid email address.';errEl.style.display='block';return false}
+    return btnLoad($('#stuSave'),id?'Saving…':'Adding…',async()=>{
+      try{
+        if(id)await api('students.update',Object.assign({},data,{id:id}));
+        else await api('students.add',data);
+        await refreshStore();closeModal();
+        logEvent((id?'Updated':'Added')+' student '+data.regNo);
+        if(!storageOK())toast('Saved for this session only — storage is blocked, use Settings → Backup','error');
+        else toast(id?'Student record updated':data.name+' added to the register');
+        renderRoute();
+      }catch(ex){errEl.textContent=ex.message;errEl.style.display='block'}
+    }),false},
+  confirmDelStudent(id){const s=Store.students.find(x=>x.id===id);if(!s)return;
+    const recs=Store.records.filter(r=>r.regNo===s.regNo).length;
+    confirmDlg({title:'Delete Student',label:'Delete Student',
+      body:'This permanently removes <b>'+esc(s.name)+'</b> ('+esc(s.regNo)+')'+(recs?' along with <b>'+recs+'</b> attendance record'+(recs>1?'s':''):'')+'. This action cannot be undone.',
+      onYes:async()=>{await api('students.delete',{id:id});await refreshStore();
+        logEvent('Deleted student '+s.regNo);updateBadge();toast(s.name+' removed from the register');renderRoute()}})},
+  stuSearch:debounce(function(v){SF.q=v;renderStuRows()},120),
+  stuDept(v){SF.dept=v;renderStuRows()},
+  stuSem(v){SF.sem=v;renderStuRows()},
+  stuSort(v){SF.sort=v;renderStuRows()},
+  async exportStudents(){const d=await api('system.export',{file:'students'});download('students.csv',d.csv);toast('students.csv downloaded')},
+  mkDate(v){if(!v)return;
+    if(v>todayStr()){toast('Cannot mark attendance for a future date','error');return}
+    MS.date=v;msReload();renderRoute()},
+  mkDept(v){MS.dept=v;msRender()},
+  mkSem(v){MS.sem=v;msRender()},
+  mkQ:debounce(function(v){MS.q=v;msRender()},120),
+  setMark(reg,st){MS.statuses[reg]=MS.statuses[reg]===st?'':st;msRender()},
+  markAll(st){msFiltered().forEach(s=>MS.statuses[s.regNo]=st);msRender()},
+  resetMark(){MS.statuses={};msRender();toast('All marks cleared for this view','info')},
+  async saveMark(btn){
+    const entries=Object.entries(MS.statuses).filter(kv=>kv[1]==='P'||kv[1]==='A').map(kv=>({regNo:kv[0],status:kv[1]}));
+    if(!entries.length){toast('Nothing to save — mark at least one student first','error');return}
+    return btnLoad(btn,'Saving…',async()=>{
+      const res=await api('attendance.mark',{date:MS.date,entries:entries});
+      await refreshStore();msReload();msRender();updateBadge();
+      logEvent('Attendance saved for '+MS.date+' ('+res.created+' new, '+res.updated+' updated)');
+      if(!storageOK())toast('Saved for this session only — storage is blocked, use Settings → Backup','error');
+      else toast('Attendance saved for '+pretty(MS.date)+' — '+res.created+' new, '+res.updated+' updated')})},
+  calPrev(){if(CALS.month>0){CALS.month--;calDraw()}},
+  calNext(){if(CALS.month<11){CALS.month++;calDraw()}},
+  calOpen(date){
+    if(date>todayStr()){toast('Future dates cannot be edited','error');return}
+    if(isSun(date)){toast('Sundays are holidays','info');return}
+    CALS.date=date;CALS.q='';CALS.statuses={};CALS.existing=0;
+    AM.byDate(date).forEach(r=>{CALS.statuses[r.regNo]=r.status;CALS.existing++});
+    calDraw();calPanelRender();
+    const p=$('#calPanel');if(p)setTimeout(()=>p.scrollIntoView({behavior:'smooth',block:'start'}),60)},
+  cDept(v){CALS.dept=v;calPanelRender()},
+  cSem(v){CALS.sem=v;calPanelRender()},
+  cQ:debounce(function(v){CALS.q=v;calPanelRender()},120),
+  cSetMark(reg,st){CALS.statuses[reg]=CALS.statuses[reg]===st?'':st;calPanelRender()},
+  cMarkAll(st){cFiltered().forEach(s=>CALS.statuses[s.regNo]=st);calPanelRender()},
+  cReset(){CALS.statuses={};calPanelRender();toast('Marks cleared for this date','info')},
+  async cSave(btn){
+    const entries=Object.entries(CALS.statuses).filter(kv=>kv[1]==='P'||kv[1]==='A').map(kv=>({regNo:kv[0],status:kv[1]}));
+    if(!entries.length){toast('Nothing to save — mark at least one student first','error');return}
+    return btnLoad(btn,'Saving…',async()=>{
+      const res=await api('attendance.mark',{date:CALS.date,entries:entries});
+      await refreshStore();
+      CALS.existing=0;CALS.statuses={};
+      AM.byDate(CALS.date).forEach(r=>{CALS.statuses[r.regNo]=r.status;CALS.existing++});
+      calDraw();calPanelRender();updateBadge();
+      logEvent('Calendar edit — '+CALS.date+' ('+res.created+' new, '+res.updated+' updated)');
+      if(!storageOK())toast('Saved for this session only — storage is blocked, use Settings → Backup','error');
+      else toast('Saved for '+pretty(CALS.date)+' — '+res.created+' new, '+res.updated+' updated')})},
+  recFilter(k,v){RF[k]=v;RF.page=1;recRender()},
+  recQ:debounce(function(v){RF.q=v;RF.page=1;recRender()},150),
+  recClear(){Object.assign(RF,{from:'',to:'',student:'',dept:'',status:'',q:'',page:1});renderRoute()},
+  recPage(n){if(n<1)return;RF.page=n;recRender()},
+  openEditRec(reg,date){const r=Store.records.find(x=>x.regNo===reg&&x.date===date);
+    recEditModal.cur=r?r.status:'P';recEditModal(reg,date,recEditModal.cur)},
+  pickRec(st){recEditModal.cur=st;
+    $('#edP').classList.toggle('on',st==='P');$('#edA').classList.toggle('on',st==='A')},
+  delRec(reg,date){confirmDlg({title:'Remove Record',label:'Remove',
+    body:'Delete the attendance record for <b>'+esc(reg)+'</b> on <b>'+pretty(date)+'</b>?',
+    onYes:async()=>{await api('attendance.delete',{regNo:reg,date:date});await refreshStore();closeModal();
+      logEvent('Removed record '+reg+' · '+date);toast('Record removed','info');recRender();updateBadge()}})},
+  async exportRecords(){
+    const all=await api('attendance.list',Object.assign({},RF,{page:1,pageSize:1e9}));
+    download('attendance_records.csv',A_COLS.map(c=>c[0]).join(',')+'\n'+
+      all.rows.map(r=>csvLine([r.regNo,r.date,r.status])).join('\n')+'\n');
+    toast(all.total+' records exported')},
+  repRange(v){REP.range=v;const t=todayStr();
+    if(v==='7')REP.from=addDays(t,-6);
+    else if(v==='30')REP.from=addDays(t,-29);
+    else if(v==='month')REP.from=t.slice(0,8)+'01';
+    else if(v==='lastmonth'){const d=new Date();d.setDate(1);d.setMonth(d.getMonth()-1);
+      REP.from=fmtD(d);REP.to=fmtD(new Date(d.getFullYear(),d.getMonth()+1,0))}
+    else if(v==='all')REP.from='2000-01-01';
+    REP.to=t;renderRoute()},
+  repFrom(v){REP.from=v;renderRoute()},repTo(v){REP.to=v;renderRoute()},
+  async exportReport(){
+    if(!lastRep){toast('Open the Reports page first','info');return}
+    const s=lastRep;
+    download('attendease_report_'+REP.from+'_to_'+REP.to+'.csv',
+      'reg_no,name,department,present,absent,total,attendance_pct\n'+
+      s.studentRows.map(r=>csvLine([r.regNo,r.name,r.department,r.present,r.absent,r.total,r.pct==null?'':r.pct.toFixed(1)])).join('\n')+'\n');
+    toast('Report CSV exported')},
+  printReport:doPrint,
+  async saveTeacher(e){e.preventDefault();
+    return btnLoad($('#tSave'),'Saving…',async()=>{
+      Store.teacher.name=$('#tName').value.trim()||Store.teacher.name;
+      Store.teacher.email=$('#tEmail').value.trim()||Store.teacher.email;
+      LS.set('ae_teacher',JSON.stringify(Store.teacher));bumpStamp();
+      shellBuilt=false;toast('Faculty profile updated');renderRoute()}),false},
+  async setServer(on){Store.settings.server=on;offlineWarned=false;
+    LS.set('ae_settings',JSON.stringify(Store.settings));
+    await refreshStore();renderRoute()},
+  testConn(btn){return btnLoad(btn,'Testing…',async()=>{
+    try{
+      const r=await fetchT(Store.settings.url.replace(/\/+$/,'')+'/api',{method:'POST',
+        headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'ping',data:{}})},3000);
+      const j=await r.json();
+      if(j.ok)toast('Connected: '+(j.data.version||'C++ backend reachable'));
+      else throw new Error(j.error||'Unexpected response');
+    }catch(e){toast('Could not reach the C++ backend — is the Crow server running on '+Store.settings.url+'?','error')}})},
+  async exportFile(kind){const d=await api('system.export',{file:kind});
+    download(kind==='students'?'students.csv':'attendance.csv',d.csv);
+    toast((kind==='students'?'students':'attendance')+'.csv downloaded')},
+  exportBackup(){
+    const backup={app:'AttendEase-SRM-AP',version:3,exported:new Date().toISOString(),
+      students:Store.students,records:Store.records,teacher:Store.teacher,users:getUsers(),
+      settings:Store.settings,seeded:LS.get('ae_seeded')||''};
+    download('attendease_backup.json',JSON.stringify(backup,null,1),'application/json');
+    toast('Backup downloaded — keep it safe')},
+  importBackup(input){
+    const f=input.files&&input.files[0];if(!f)return;
+    const rd=new FileReader();
+    rd.onload=function(){
+      try{
+        const b=JSON.parse(rd.result);
+        if(!b||!Array.isArray(b.students)||!Array.isArray(b.records))throw new Error('Not a valid AttendEase backup file');
+        confirmDlg({title:'Restore Backup',label:'Restore Now',
+          body:'This replaces <b>all current data</b> with the backup from <b>'+esc(String(b.exported||'unknown date').slice(0,10))+'</b> ('+b.students.length+' students, '+b.records.length+' records). Continue?',
+          onYes:async()=>{
+            Store.students=b.students;Store.records=b.records;
+            FM.saveStudents(Store.students);FM.saveAtt(Store.records);
+            if(b.teacher){Store.teacher=b.teacher;LS.set('ae_teacher',JSON.stringify(b.teacher))}
+            if(b.users)saveUsers(b.users);
+            if(b.settings){Store.settings=Object.assign(Store.settings,b.settings);LS.set('ae_settings',JSON.stringify(Store.settings))}
+            LS.set('ae_seeded',b.seeded||'1');bumpStamp();
+            await refreshStore();shellBuilt=false;
+            toast('Backup restored — '+b.students.length+' students, '+b.records.length+' records');
+            renderRoute()}})
+      }catch(e){toast('Could not read backup: '+(e.message||'invalid file'),'error')}
+      input.value=''};
+    rd.readAsText(f)},
+  resetData(btn){confirmDlg({title:'Reset All Data',label:'Reset & Reseed',
+    body:'This deletes <b>all students and attendance records</b> and regenerates the demonstration dataset. Continue?',
+    onYes:async()=>{await api('system.reset');await refreshStore();
+      logEvent('Register reset and demo dataset regenerated');toast('Register reseeded');renderRoute()}})}};
+window.AE=AE;
+
+/* ============ boot ============ */
+(async function boot(){
+  try{
+    try{const t=JSON.parse(LS.get('ae_teacher'));if(t)Object.assign(Store.teacher,t)}catch(e){}
+    try{const s=JSON.parse(LS.get('ae_settings'));if(s)Object.assign(Store.settings,s)}catch(e){}
+    Store.students=FM.loadStudents();Store.records=FM.loadAtt();
+    lastStamp=readStamp();
+    if(!LS.get('ae_seeded')&&(!Store.students.length||!Store.records.length)){seedDemo()}
+    route();
+    if(!storageOK())setTimeout(showStorBanner,700);
+  }catch(e){
+    showBootError(e);
+    const d=document.getElementById('bootError');
+    if(!d)alert('Failed to start: '+(e.message||e))}
+})();
+</script>
+</body>
+</html>
